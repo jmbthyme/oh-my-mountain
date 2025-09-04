@@ -5,3 +5,6 @@
 // Mountain data hook
 export { useMountainData } from './useMountainData';
 export type { UseMountainDataResult } from './useMountainData';
+
+// Toast notifications hook
+export { default as useToast } from './useToast';

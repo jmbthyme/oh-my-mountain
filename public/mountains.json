@@ -1,6 +1,22 @@
 {
   "mountains": [
     {
+      "id": "tossa_montbui",
+      "name": "Tossa de Montbui",
+      "height": 627,
+      "width": 1000,
+      "country": "Spain",
+      "region": "Catalonia"
+    },
+    {
+      "id": "aneto",
+      "name": "Aneto",
+      "height": 3.403,
+      "width": 2000,
+      "country": "Spain",
+      "region": "Aragon"
+    },
+    {
       "id": "everest",
       "name": "Mount Everest",
       "height": 8849,

@@ -1,0 +1,109 @@
+.skeleton {
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  display: block;
+}
+
+.skeleton--animate {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+.skeleton--text {
+  height: 1em;
+  margin-bottom: 0.5em;
+}
+
+.skeleton--rectangular {
+  /* Default rectangular dimensions */
+}
+
+.skeleton--circular {
+  border-radius: 50%;
+}
+
+/* Mountain List Skeleton */
+.mountain-list-skeleton {
+  padding: 1rem;
+}
+
+.mountain-list-skeleton__header {
+  margin-bottom: 1.5rem;
+}
+
+.mountain-list-skeleton__header .skeleton {
+  margin-bottom: 0.5rem;
+}
+
+.mountain-list-skeleton__items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mountain-list-skeleton__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.mountain-list-skeleton__content {
+  flex: 1;
+}
+
+.mountain-list-skeleton__content .skeleton {
+  margin-bottom: 0.5rem;
+}
+
+.mountain-list-skeleton__content .skeleton:last-child {
+  margin-bottom: 0;
+}
+
+/* Comparison View Skeleton */
+.comparison-view-skeleton {
+  padding: 2rem;
+}
+
+.comparison-view-skeleton__header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.comparison-view-skeleton__header .skeleton {
+  margin: 0 auto 0.5rem;
+}
+
+.comparison-view-skeleton__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+.comparison-view-skeleton__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Accessibility: Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton--animate {
+    animation: none;
+    background: #e5e7eb;
+  }
+}
