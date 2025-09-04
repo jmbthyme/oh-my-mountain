@@ -152,8 +152,8 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
     prevProps.mountain.width === nextProps.mountain.width &&
     prevProps.mountain.country === nextProps.mountain.country &&
     prevProps.scale === nextProps.scale &&
-    prevProps.maxDimensions?.height === nextProps.maxDimensions?.height &&
-    prevProps.maxDimensions?.width === nextProps.maxDimensions?.width
+    prevProps.maxDimensions?.maxHeight === nextProps.maxDimensions?.maxHeight &&
+    prevProps.maxDimensions?.maxWidth === nextProps.maxDimensions?.maxWidth
   );
 });
 
