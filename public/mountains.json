@@ -111,6 +111,70 @@
       "width": 4000,
       "country": "Pakistan/China",
       "region": "Karakoram"
+    },
+    {
+      "id": "mont_blanc",
+      "name": "Mont Blanc",
+      "height": 4807,
+      "width": 2000,
+      "country": "France/Italy",
+      "region": "Alps"
+    },
+    {
+      "id": "barre_des_ecrins",
+      "name": "Barre des Écrins",
+      "height": 4102,
+      "width": 1500,
+      "country": "France",
+      "region": "Alps"
+    },
+    {
+      "id": "grossglockner",
+      "name": "Grossglockner",
+      "height": 3798,
+      "width": 1800,
+      "country": "Austria",
+      "region": "Alps"
+    },
+    {
+      "id": "wildspitze",
+      "name": "Wildspitze",
+      "height": 3770,
+      "width": 1700,
+      "country": "Austria",
+      "region": "Alps"
+    },
+    {
+      "id": "matterhorn",
+      "name": "Matterhorn",
+      "height": 4478,
+      "width": 1600,
+      "country": "Switzerland/Italy",
+      "region": "Alps"
+    },
+    {
+      "id": "dufourspitze",
+      "name": "Dufourspitze",
+      "height": 4634,
+      "width": 1400,
+      "country": "Switzerland",
+      "region": "Alps"
+    },
+    {
+      "id": "zugspitze",
+      "name": "Zugspitze",
+      "height": 2962,
+      "width": 1200,
+      "country": "Germany",
+      "region": "Alps"
+    },
+    {
+      "id": "watzmann",
+      "name": "Watzmann",
+      "height": 2713,
+      "width": 1100,
+      "country": "Germany",
+      "region": "Alps"
     }
   ]
 }

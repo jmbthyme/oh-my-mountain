@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import type { ComparisonViewProps } from '../types';
 import MountainTriangle from './MountainTriangle';
 import { 
@@ -12,8 +12,9 @@ import './ComparisonView.css';
  * ComparisonView component for mountain visualization layout
  * Arranges multiple MountainTriangle components in a responsive grid
  * Requirements: 2.4, 3.3, 3.4, 5.3
+ * Performance: Optimized with memoization and efficient rendering
  */
-const ComparisonView: React.FC<ComparisonViewProps> = ({ selectedMountains }) => {
+const ComparisonView: React.FC<ComparisonViewProps> = React.memo(({ selectedMountains }) => {
   const [containerDimensions, setContainerDimensions] = useState({
     containerWidth: 800,
     containerHeight: 600,
@@ -38,6 +39,52 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({ selectedMountains }) =>
     // Cleanup
     return () => window.removeEventListener('resize', updateDimensions);
   }, [updateDimensions]);
+
+  // Memoize expensive calculations to prevent unnecessary recalculations
+  // These hooks must be called before any conditional returns to follow Rules of Hooks
+  const maxDimensions = useMemo(() => 
+    selectedMountains.length > 0 ? calculateMaxDimensions(selectedMountains) : { maxHeight: 0, maxWidth: 0 }, 
+    [selectedMountains]
+  );
+  
+  const scaleFactor = useMemo(() => 
+    selectedMountains.length > 0 ? calculateScaleFactor(maxDimensions, containerDimensions) : 1,
+    [maxDimensions, containerDimensions, selectedMountains.length]
+  );
+
+  // Memoize grid columns calculation
+  const gridColumns = useMemo(() => {
+    const getGridColumns = (count: number, containerWidth: number): number => {
+      if (containerWidth < 360) {
+        return 1;
+      } else if (containerWidth < 480) {
+        return Math.min(2, count);
+      } else if (containerWidth < 640) {
+        return Math.min(3, count);
+      } else if (containerWidth < 768) {
+        return Math.min(3, count);
+      } else if (containerWidth < 1024) {
+        return Math.min(4, count);
+      } else if (containerWidth < 1200) {
+        return Math.min(5, count);
+      } else {
+        return Math.min(6, count);
+      }
+    };
+    return getGridColumns(selectedMountains.length, containerDimensions.containerWidth);
+  }, [selectedMountains.length, containerDimensions.containerWidth]);
+
+  // Memoize scale info calculations
+  const scaleInfo = useMemo(() => {
+    if (selectedMountains.length === 0) {
+      return { tallest: 0, widest: 0, scale: 1 };
+    }
+    return {
+      tallest: Math.max(...selectedMountains.map(m => m.height)),
+      widest: Math.max(...selectedMountains.map(m => m.width)),
+      scale: Math.round(1 / scaleFactor)
+    };
+  }, [selectedMountains, scaleFactor]);
 
   // Handle empty state
   if (selectedMountains.length === 0) {
@@ -70,10 +117,6 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({ selectedMountains }) =>
     );
   }
 
-  // Calculate scaling for all mountains
-  const maxDimensions = calculateMaxDimensions(selectedMountains);
-  const scaleFactor = calculateScaleFactor(maxDimensions, containerDimensions);
-
   // Handle single mountain selection with centered layout
   if (selectedMountains.length === 1) {
     return (
@@ -94,33 +137,7 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({ selectedMountains }) =>
     );
   }
 
-  // Determine grid layout based on number of mountains and screen size
-  const getGridColumns = (count: number, containerWidth: number): number => {
-    if (containerWidth < 360) {
-      // Very small mobile: 1 column only
-      return 1;
-    } else if (containerWidth < 480) {
-      // Small mobile: 1-2 columns max
-      return Math.min(2, count);
-    } else if (containerWidth < 640) {
-      // Large mobile: 2-3 columns max
-      return Math.min(3, count);
-    } else if (containerWidth < 768) {
-      // Small tablet: 2-3 columns max
-      return Math.min(3, count);
-    } else if (containerWidth < 1024) {
-      // Large tablet/small desktop: 3-4 columns max
-      return Math.min(4, count);
-    } else if (containerWidth < 1200) {
-      // Desktop: 3-5 columns max
-      return Math.min(5, count);
-    } else {
-      // Large desktop: up to 6 columns
-      return Math.min(6, count);
-    }
-  };
 
-  const gridColumns = getGridColumns(selectedMountains.length, containerDimensions.containerWidth);
 
   return (
     <div className="comparison-view">
@@ -157,24 +174,36 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({ selectedMountains }) =>
         <div className="scale-info__item">
           <span className="scale-info__label">Tallest:</span>
           <span className="scale-info__value">
-            {Math.max(...selectedMountains.map(m => m.height)).toLocaleString()}m
+            {scaleInfo.tallest.toLocaleString()}m
           </span>
         </div>
         <div className="scale-info__item">
           <span className="scale-info__label">Widest:</span>
           <span className="scale-info__value">
-            {Math.max(...selectedMountains.map(m => m.width)).toLocaleString()}m
+            {scaleInfo.widest.toLocaleString()}m
           </span>
         </div>
         <div className="scale-info__item">
           <span className="scale-info__label">Scale:</span>
           <span className="scale-info__value">
-            1:{Math.round(1 / scaleFactor).toLocaleString()}
+            1:{scaleInfo.scale.toLocaleString()}
           </span>
         </div>
       </div>
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison for React.memo
+  // Only re-render if selectedMountains array changes
+  if (prevProps.selectedMountains.length !== nextProps.selectedMountains.length) {
+    return false;
+  }
+  
+  return prevProps.selectedMountains.every((mountain, index) => 
+    mountain.id === nextProps.selectedMountains[index]?.id
+  );
+});
+
+ComparisonView.displayName = 'ComparisonView';
 
 export default ComparisonView;

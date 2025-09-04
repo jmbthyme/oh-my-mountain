@@ -7,8 +7,9 @@ import './MountainTriangle.css';
  * MountainTriangle component renders an individual mountain as an SVG triangle
  * with proper scaling, labels, and accessibility features
  * Requirements: 3.1, 3.2, 4.1, 4.2, 4.3, 4.4
+ * Performance: Memoized to prevent unnecessary re-renders
  */
-const MountainTriangle: React.FC<MountainTriangleProps> = ({
+const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
   mountain,
   scale,
   maxDimensions,
@@ -141,6 +142,21 @@ const MountainTriangle: React.FC<MountainTriangleProps> = ({
       </svg>
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison function for React.memo
+  // Only re-render if mountain data, scale, or maxDimensions change
+  return (
+    prevProps.mountain.id === nextProps.mountain.id &&
+    prevProps.mountain.name === nextProps.mountain.name &&
+    prevProps.mountain.height === nextProps.mountain.height &&
+    prevProps.mountain.width === nextProps.mountain.width &&
+    prevProps.mountain.country === nextProps.mountain.country &&
+    prevProps.scale === nextProps.scale &&
+    prevProps.maxDimensions?.height === nextProps.maxDimensions?.height &&
+    prevProps.maxDimensions?.width === nextProps.maxDimensions?.width
+  );
+});
+
+MountainTriangle.displayName = 'MountainTriangle';
 
 export default MountainTriangle;

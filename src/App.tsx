@@ -1,17 +1,21 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, Suspense, lazy } from 'react';
 import { useMountainData, useToast } from './hooks';
 import { 
   Header, 
-  MountainList, 
-  ComparisonView, 
   ErrorBoundary, 
   ToastContainer,
   MountainListSkeleton,
   ComparisonViewSkeleton 
 } from './components';
 import type { Mountain } from './types';
+import { measurePerformance } from './utils/performanceMonitor';
 import './App.css';
 import './styles/responsive.css';
+import './styles/animations.css';
+
+// Lazy load components for better performance
+const MountainList = lazy(() => import('./components/MountainList').then(module => ({ default: module.MountainList })));
+const ComparisonView = lazy(() => import('./components/ComparisonView'));
 
 /**
  * Main App component with global state management
@@ -29,35 +33,39 @@ function App() {
 
   // Handle mountain selection toggle
   const handleMountainToggle = useCallback((mountain: Mountain) => {
-    setSelectedMountains(prev => {
-      const isSelected = prev.some(m => m.id === mountain.id);
-      
-      if (isSelected) {
-        // Remove mountain from selection
-        showSuccess('Mountain removed', `${mountain.name} removed from comparison`);
-        return prev.filter(m => m.id !== mountain.id);
-      } else {
-        // Add mountain to selection (max 10 mountains)
-        if (prev.length >= 10) {
-          showWarning(
-            'Selection limit reached', 
-            'You can compare up to 10 mountains at once. Remove some mountains to add new ones.'
-          );
-          return prev; // Don't add if at maximum
+    measurePerformance.measure('mountain-selection', () => {
+      setSelectedMountains(prev => {
+        const isSelected = prev.some(m => m.id === mountain.id);
+        
+        if (isSelected) {
+          // Remove mountain from selection
+          showSuccess('Mountain removed', `${mountain.name} removed from comparison`);
+          return prev.filter(m => m.id !== mountain.id);
+        } else {
+          // Add mountain to selection (max 10 mountains)
+          if (prev.length >= 10) {
+            showWarning(
+              'Selection limit reached', 
+              'You can compare up to 10 mountains at once. Remove some mountains to add new ones.'
+            );
+            return prev; // Don't add if at maximum
+          }
+          showSuccess('Mountain added', `${mountain.name} added to comparison`);
+          return [...prev, mountain];
         }
-        showSuccess('Mountain added', `${mountain.name} added to comparison`);
-        return [...prev, mountain];
-      }
+      });
     });
   }, [showSuccess, showWarning]);
 
   // Handle clearing all selections
   const handleClearSelections = useCallback(() => {
-    const count = selectedMountains.length;
-    setSelectedMountains([]);
-    if (count > 0) {
-      showSuccess('Selections cleared', `Removed ${count} mountain${count !== 1 ? 's' : ''} from comparison`);
-    }
+    measurePerformance.measure('clear-selections', () => {
+      const count = selectedMountains.length;
+      setSelectedMountains([]);
+      if (count > 0) {
+        showSuccess('Selections cleared', `Removed ${count} mountain${count !== 1 ? 's' : ''} from comparison`);
+      }
+    });
   }, [selectedMountains.length, showSuccess]);
 
   // Loading state with skeleton screens
@@ -139,11 +147,13 @@ function App() {
                   <button onClick={() => window.location.reload()}>Reload</button>
                 </div>
               }>
-                <MountainList
-                  mountains={mountains}
-                  selectedMountains={selectedMountains}
-                  onMountainToggle={handleMountainToggle}
-                />
+                <Suspense fallback={<MountainListSkeleton />}>
+                  <MountainList
+                    mountains={mountains}
+                    selectedMountains={selectedMountains}
+                    onMountainToggle={handleMountainToggle}
+                  />
+                </Suspense>
               </ErrorBoundary>
             </div>
             
@@ -154,7 +164,9 @@ function App() {
                   <button onClick={() => window.location.reload()}>Reload</button>
                 </div>
               }>
-                <ComparisonView selectedMountains={selectedMountains} />
+                <Suspense fallback={<ComparisonViewSkeleton />}>
+                  <ComparisonView selectedMountains={selectedMountains} />
+                </Suspense>
               </ErrorBoundary>
             </div>
           </div>

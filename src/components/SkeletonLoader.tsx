@@ -12,8 +12,9 @@ interface SkeletonLoaderProps {
 /**
  * Skeleton loader component for better loading UX
  * Requirements: 5.1, 5.4
+ * Performance: Memoized to prevent unnecessary re-renders
  */
-export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
+export const SkeletonLoader: React.FC<SkeletonLoaderProps> = React.memo(({
   variant = 'text',
   width,
   height,
@@ -38,12 +39,15 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
       aria-label="Loading content"
     />
   );
-};
+});
+
+SkeletonLoader.displayName = 'SkeletonLoader';
 
 /**
  * Skeleton component for mountain list items
+ * Performance: Memoized since props don't change
  */
-export const MountainListSkeleton: React.FC = () => {
+export const MountainListSkeleton: React.FC = React.memo(() => {
   return (
     <div className="mountain-list-skeleton">
       <div className="mountain-list-skeleton__header">
@@ -65,12 +69,15 @@ export const MountainListSkeleton: React.FC = () => {
       </div>
     </div>
   );
-};
+});
+
+MountainListSkeleton.displayName = 'MountainListSkeleton';
 
 /**
  * Skeleton component for comparison view
+ * Performance: Memoized since props don't change
  */
-export const ComparisonViewSkeleton: React.FC = () => {
+export const ComparisonViewSkeleton: React.FC = React.memo(() => {
   return (
     <div className="comparison-view-skeleton">
       <div className="comparison-view-skeleton__header">
@@ -89,6 +96,8 @@ export const ComparisonViewSkeleton: React.FC = () => {
       </div>
     </div>
   );
-};
+});
+
+ComparisonViewSkeleton.displayName = 'ComparisonViewSkeleton';
 
 export default SkeletonLoader;
