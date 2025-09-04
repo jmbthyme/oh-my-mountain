@@ -1,0 +1,178 @@
+.mountain-list {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.mountain-list__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.mountain-list__header h2 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.mountain-list__selection-info {
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.mountain-list__warning {
+  background-color: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  color: #92400e;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.mountain-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mountain-list__item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background-color: #ffffff;
+}
+
+.mountain-list__item:hover:not(.mountain-list__item--disabled) {
+  border-color: #3b82f6;
+  background-color: #f8fafc;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.mountain-list__item:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.mountain-list__item--selected {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+.mountain-list__item--selected:hover {
+  border-color: #059669;
+  background-color: #ecfdf5;
+}
+
+.mountain-list__item--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f9fafb;
+}
+
+.mountain-list__checkbox {
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.mountain-list__checkbox input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+}
+
+.mountain-list__checkbox input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+}
+
+.mountain-list__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.mountain-list__name {
+  margin: 0 0 0.5rem 0;
+  color: #1f2937;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.mountain-list__details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.mountain-list__height,
+.mountain-list__width,
+.mountain-list__location {
+  font-weight: 500;
+}
+
+.mountain-list__height::before {
+  content: "📏 ";
+}
+
+.mountain-list__width::before {
+  content: "↔️ ";
+}
+
+.mountain-list__location::before {
+  content: "📍 ";
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .mountain-list {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .mountain-list__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .mountain-list__item {
+    padding: 0.75rem;
+  }
+  
+  .mountain-list__details {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .mountain-list__name {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mountain-list__checkbox {
+    margin-right: 0.75rem;
+  }
+  
+  .mountain-list__checkbox input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+  }
+}
