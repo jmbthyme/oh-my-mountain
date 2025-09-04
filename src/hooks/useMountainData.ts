@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { Mountain } from '../types/Mountain';
+import type { Mountain } from '../types/Mountain';
 import { loadMountainData, DataLoadError } from '../utils/dataLoader';
 
 export interface UseMountainDataResult {

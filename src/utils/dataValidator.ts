@@ -3,7 +3,7 @@
  * Requirements: 1.1, 1.3, 6.5
  */
 
-import { Mountain } from '../types/Mountain';
+import type { Mountain } from '../types/Mountain';
 
 export class ValidationError extends Error {
   constructor(message: string, public field?: string, public index?: number) {

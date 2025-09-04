@@ -3,7 +3,7 @@
  * Requirements: 1.1, 1.3, 5.1
  */
 
-import { Mountain } from '../types/Mountain';
+import type { Mountain } from '../types/Mountain';
 import { validateMountainData, ValidationError } from './dataValidator';
 
 export class DataLoadError extends Error {

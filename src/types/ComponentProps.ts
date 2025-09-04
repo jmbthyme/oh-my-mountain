@@ -33,8 +33,8 @@ export interface MountainTriangleProps {
   
   /** Maximum dimensions for scaling calculations */
   maxDimensions: {
-    height: number;
-    width: number;
+    maxHeight: number;
+    maxWidth: number;
   };
 }
 
