@@ -12,3 +12,14 @@ export {
   validateMountainData, 
   ValidationError 
 } from './dataValidator';
+
+// Scaling utilities
+export {
+  calculateMaxDimensions,
+  calculateContainerDimensions,
+  calculateScaleFactor,
+  createScaleConfig,
+  generateTrianglePath,
+  calculateScaledDimensions,
+  calculateSVGViewBox,
+} from './scalingUtils';
