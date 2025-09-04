@@ -1,0 +1,341 @@
+/**
+ * Responsive utility classes and mobile optimizations
+ * Requirements: 4.4, 5.3
+ */
+
+/* Responsive breakpoint utilities */
+.mobile-only {
+  display: block;
+}
+
+.tablet-up {
+  display: none;
+}
+
+.desktop-up {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .mobile-only {
+    display: none;
+  }
+  
+  .tablet-up {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .desktop-up {
+    display: block;
+  }
+}
+
+/* Touch-friendly spacing utilities */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.touch-padding {
+  padding: 0.75rem;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  .touch-padding {
+    padding: 1rem;
+  }
+}
+
+/* Responsive text sizing */
+.text-responsive-sm {
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+}
+
+.text-responsive-base {
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+.text-responsive-lg {
+  font-size: clamp(1rem, 3vw, 1.25rem);
+}
+
+.text-responsive-xl {
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+}
+
+/* Responsive spacing utilities */
+.spacing-responsive-sm {
+  margin: clamp(0.5rem, 2vw, 1rem);
+}
+
+.spacing-responsive-md {
+  margin: clamp(1rem, 3vw, 1.5rem);
+}
+
+.spacing-responsive-lg {
+  margin: clamp(1.5rem, 4vw, 2rem);
+}
+
+.padding-responsive-sm {
+  padding: clamp(0.5rem, 2vw, 1rem);
+}
+
+.padding-responsive-md {
+  padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+.padding-responsive-lg {
+  padding: clamp(1.5rem, 4vw, 2rem);
+}
+
+/* Mobile-first grid utilities */
+.grid-responsive {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .grid-responsive {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .grid-responsive {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Flexible container utilities */
+.container-responsive {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-responsive {
+    max-width: 640px;
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container-responsive {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-responsive {
+    max-width: 1024px;
+    padding: 0 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-responsive {
+    max-width: 1280px;
+  }
+}
+
+/* Aspect ratio utilities for consistent sizing */
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+/* Safe area utilities for mobile devices with notches */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Scroll behavior utilities */
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+.scroll-auto {
+  scroll-behavior: auto;
+}
+
+.overflow-touch {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Focus and interaction utilities */
+.focus-ring {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--primary-color, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* High contrast mode utilities */
+@media (prefers-contrast: high) {
+  .high-contrast-border {
+    border: 2px solid currentColor;
+  }
+  
+  .high-contrast-bg {
+    background-color: Canvas;
+    color: CanvasText;
+  }
+}
+
+/* Reduced motion utilities */
+@media (prefers-reduced-motion: reduce) {
+  .motion-reduce {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Print utilities */
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-visible {
+    display: block !important;
+  }
+}
+
+/* Orientation utilities */
+@media (orientation: landscape) {
+  .landscape-hidden {
+    display: none;
+  }
+  
+  .landscape-visible {
+    display: block;
+  }
+}
+
+@media (orientation: portrait) {
+  .portrait-hidden {
+    display: none;
+  }
+  
+  .portrait-visible {
+    display: block;
+  }
+}
+
+/* Mobile keyboard handling */
+@media (max-width: 768px) {
+  .keyboard-adjust {
+    transition: transform 0.3s ease;
+  }
+  
+  .keyboard-adjust.keyboard-open {
+    transform: translateY(-50px);
+  }
+}
+
+/* Improved tap targets for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .tap-target {
+    position: relative;
+  }
+  
+  .tap-target::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 44px;
+    min-height: 44px;
+    z-index: -1;
+  }
+}
+
+/* Responsive image utilities */
+.img-responsive {
+  max-width: 100%;
+  height: auto;
+}
+
+.img-cover {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.img-contain {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+/* Flexible text utilities */
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-wrap-balance {
+  text-wrap: balance;
+}
+
+.text-wrap-pretty {
+  text-wrap: pretty;
+}
+
+/* Mobile-specific utilities */
+@media (max-width: 640px) {
+  .mobile-full-width {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+  
+  .mobile-center {
+    text-align: center;
+  }
+  
+  .mobile-stack > * + * {
+    margin-top: 1rem;
+  }
+}

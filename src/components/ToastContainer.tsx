@@ -1,10 +1,13 @@
 import React from 'react';
-import { Toast, ToastProps } from './Toast';
+import { Toast } from './Toast';
+import type { ToastProps, ToastType } from './Toast';
 import './ToastContainer.css';
+
+export type { ToastType } from './Toast';
 
 export interface ToastData {
   id: string;
-  type: ToastProps['type'];
+  type: ToastType;
   title: string;
   message?: string;
   duration?: number;

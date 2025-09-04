@@ -33,12 +33,36 @@ export const calculateContainerDimensions = (
   viewportHeight: number,
   padding: number = 40
 ): { containerWidth: number; containerHeight: number } => {
-  // Reserve space for UI elements (header, list, etc.)
-  const reservedHeight = 200;
-  const reservedWidth = 300;
+  // Responsive reserved space based on screen size
+  let reservedHeight: number;
+  let reservedWidth: number;
 
-  const containerWidth = Math.max(200, viewportWidth - reservedWidth - padding * 2);
-  const containerHeight = Math.max(150, viewportHeight - reservedHeight - padding * 2);
+  if (viewportWidth <= 480) {
+    // Mobile phones
+    reservedHeight = 180;
+    reservedWidth = 40;
+    padding = Math.min(padding, 20);
+  } else if (viewportWidth <= 768) {
+    // Tablets and small screens
+    reservedHeight = 200;
+    reservedWidth = 60;
+    padding = Math.min(padding, 30);
+  } else if (viewportWidth <= 1024) {
+    // Small desktops
+    reservedHeight = 220;
+    reservedWidth = 200;
+  } else {
+    // Large desktops
+    reservedHeight = 240;
+    reservedWidth = 300;
+  }
+
+  // Calculate container dimensions with responsive minimums
+  const minWidth = viewportWidth <= 480 ? 280 : viewportWidth <= 768 ? 400 : 500;
+  const minHeight = viewportWidth <= 480 ? 200 : viewportWidth <= 768 ? 250 : 300;
+
+  const containerWidth = Math.max(minWidth, viewportWidth - reservedWidth - padding * 2);
+  const containerHeight = Math.max(minHeight, viewportHeight - reservedHeight - padding * 2);
 
   return { containerWidth, containerHeight };
 };

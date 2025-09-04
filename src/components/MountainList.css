@@ -139,40 +139,186 @@
   content: "📍 ";
 }
 
-/* Responsive design */
+/* Responsive design with enhanced mobile optimization */
 @media (max-width: 768px) {
   .mountain-list {
     padding: 1rem;
     margin-bottom: 1rem;
+    border-radius: 6px;
   }
   
   .mountain-list__header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  .mountain-list__header h2 {
+    font-size: 1.25rem;
+  }
+  
+  .mountain-list__item {
+    padding: 0.875rem;
+    border-radius: 4px;
+  }
+  
+  .mountain-list__details {
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+  
+  .mountain-list__name {
+    font-size: 1rem;
+    margin-bottom: 0.375rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .mountain-list {
+    padding: 0.875rem;
   }
   
   .mountain-list__item {
     padding: 0.75rem;
   }
   
-  .mountain-list__details {
-    flex-direction: column;
-    gap: 0.25rem;
+  .mountain-list__name {
+    font-size: 0.9375rem;
   }
   
-  .mountain-list__name {
-    font-size: 1rem;
+  .mountain-list__details {
+    font-size: 0.8125rem;
   }
 }
 
 @media (max-width: 480px) {
+  .mountain-list {
+    padding: 0.75rem;
+  }
+  
+  .mountain-list__header h2 {
+    font-size: 1.125rem;
+  }
+  
+  .mountain-list__selection-info {
+    font-size: 0.8125rem;
+  }
+  
+  .mountain-list__item {
+    padding: 0.625rem;
+  }
+  
   .mountain-list__checkbox {
     margin-right: 0.75rem;
   }
   
   .mountain-list__checkbox input[type="checkbox"] {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+  
+  .mountain-list__name {
+    font-size: 0.875rem;
+  }
+  
+  .mountain-list__details {
+    font-size: 0.75rem;
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .mountain-list {
+    padding: 0.625rem;
+  }
+  
+  .mountain-list__item {
+    padding: 0.5rem;
+  }
+  
+  .mountain-list__checkbox {
+    margin-right: 0.5rem;
+  }
+  
+  .mountain-list__checkbox input[type="checkbox"] {
     width: 1rem;
     height: 1rem;
+  }
+}
+
+/* Touch-friendly interactions for mobile devices */
+@media (hover: none) and (pointer: coarse) {
+  .mountain-list__item {
+    min-height: 44px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
+  }
+  
+  .mountain-list__item:active {
+    background-color: #f1f5f9;
+    transform: scale(0.98);
+  }
+  
+  .mountain-list__item--selected:active {
+    background-color: #dcfce7;
+  }
+  
+  .mountain-list__checkbox input[type="checkbox"] {
+    min-width: 44px;
+    min-height: 44px;
+    cursor: pointer;
+  }
+}
+
+/* Improved focus states for keyboard navigation */
+.mountain-list__item:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-color: #3b82f6;
+}
+
+.mountain-list__checkbox input[type="checkbox"]:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* High contrast mode improvements */
+@media (prefers-contrast: high) {
+  .mountain-list {
+    border: 2px solid #000000;
+  }
+  
+  .mountain-list__item {
+    border-color: #000000;
+  }
+  
+  .mountain-list__item--selected {
+    border-color: #000000;
+    background-color: #ffffff;
+  }
+  
+  .mountain-list__name {
+    color: #000000;
+  }
+  
+  .mountain-list__details {
+    color: #333333;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .mountain-list__item {
+    transition: none;
+  }
+  
+  .mountain-list__item:hover {
+    transform: none;
+  }
+  
+  .mountain-list__item:active {
+    transform: none;
   }
 }

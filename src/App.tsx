@@ -11,6 +11,7 @@ import {
 } from './components';
 import type { Mountain } from './types';
 import './App.css';
+import './styles/responsive.css';
 
 /**
  * Main App component with global state management

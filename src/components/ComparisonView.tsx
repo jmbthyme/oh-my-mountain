@@ -96,18 +96,27 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({ selectedMountains }) =>
 
   // Determine grid layout based on number of mountains and screen size
   const getGridColumns = (count: number, containerWidth: number): number => {
-    if (containerWidth < 480) {
-      // Mobile: 1-2 columns max
+    if (containerWidth < 360) {
+      // Very small mobile: 1 column only
+      return 1;
+    } else if (containerWidth < 480) {
+      // Small mobile: 1-2 columns max
       return Math.min(2, count);
-    } else if (containerWidth < 768) {
-      // Tablet: 2-3 columns max
+    } else if (containerWidth < 640) {
+      // Large mobile: 2-3 columns max
       return Math.min(3, count);
-    } else if (containerWidth < 1200) {
-      // Desktop small: 3-4 columns max
+    } else if (containerWidth < 768) {
+      // Small tablet: 2-3 columns max
+      return Math.min(3, count);
+    } else if (containerWidth < 1024) {
+      // Large tablet/small desktop: 3-4 columns max
       return Math.min(4, count);
-    } else {
-      // Desktop large: up to 5 columns
+    } else if (containerWidth < 1200) {
+      // Desktop: 3-5 columns max
       return Math.min(5, count);
+    } else {
+      // Large desktop: up to 6 columns
+      return Math.min(6, count);
     }
   };
 

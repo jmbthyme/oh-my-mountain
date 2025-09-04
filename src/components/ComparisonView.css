@@ -152,7 +152,18 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-/* Responsive design */
+/* Enhanced responsive design with mobile optimization */
+@media (max-width: 1024px) {
+  .comparison-view {
+    padding: 18px;
+  }
+  
+  .mountains-grid {
+    gap: 18px;
+    padding: 18px 0;
+  }
+}
+
 @media (max-width: 768px) {
   .comparison-view {
     padding: 16px;
@@ -160,10 +171,12 @@
 
   .comparison-title {
     font-size: 1.5rem;
+    line-height: 1.3;
   }
 
   .comparison-subtitle {
     font-size: 0.9rem;
+    line-height: 1.4;
   }
 
   .mountains-grid {
@@ -193,6 +206,26 @@
 
   .empty-state__description {
     font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 640px) {
+  .comparison-view {
+    padding: 14px;
+  }
+  
+  .comparison-header {
+    margin-bottom: 18px;
+  }
+  
+  .comparison-title {
+    font-size: 1.375rem;
+  }
+  
+  .mountains-grid {
+    gap: 14px;
+    padding: 14px 0;
   }
 }
 
@@ -207,6 +240,11 @@
 
   .comparison-title {
     font-size: 1.25rem;
+    line-height: 1.2;
+  }
+  
+  .comparison-subtitle {
+    font-size: 0.875rem;
   }
 
   .mountains-grid {
@@ -216,7 +254,7 @@
 
   .scale-info {
     gap: 8px;
-    padding: 8px;
+    padding: 10px;
   }
 
   .scale-info__label {
@@ -225,6 +263,116 @@
 
   .scale-info__value {
     font-size: 0.8rem;
+  }
+  
+  .empty-state {
+    padding: 16px 12px;
+  }
+  
+  .empty-state__title {
+    font-size: 1.125rem;
+  }
+  
+  .empty-state__description {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .comparison-view {
+    padding: 10px;
+  }
+  
+  .comparison-header {
+    margin-bottom: 14px;
+  }
+  
+  .comparison-title {
+    font-size: 1.125rem;
+  }
+  
+  .comparison-subtitle {
+    font-size: 0.8125rem;
+  }
+  
+  .mountains-grid {
+    gap: 10px;
+    padding: 10px 0;
+  }
+  
+  .scale-info {
+    gap: 6px;
+    padding: 8px;
+  }
+  
+  .empty-state {
+    padding: 12px 8px;
+  }
+}
+
+/* Touch-friendly interactions for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .mountain-grid-item {
+    min-height: 44px;
+    -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
+  }
+  
+  .mountain-grid-item:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Improved grid responsiveness */
+.mountains-grid[style*="--grid-columns: 1"] {
+  justify-items: center;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.mountains-grid[style*="--grid-columns: 2"] .mountain-grid-item {
+  max-width: min(300px, 45vw);
+}
+
+.mountains-grid[style*="--grid-columns: 3"] .mountain-grid-item {
+  max-width: min(250px, 30vw);
+}
+
+.mountains-grid[style*="--grid-columns: 4"] .mountain-grid-item {
+  max-width: min(200px, 22vw);
+}
+
+.mountains-grid[style*="--grid-columns: 5"] .mountain-grid-item {
+  max-width: min(180px, 18vw);
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+  .comparison-view {
+    padding: 12px;
+  }
+  
+  .comparison-header {
+    margin-bottom: 12px;
+  }
+  
+  .comparison-title {
+    font-size: 1.25rem;
+  }
+  
+  .mountains-grid {
+    gap: 12px;
+    padding: 12px 0;
+  }
+  
+  .scale-info {
+    flex-direction: row;
+    gap: 16px;
+    padding: 8px 12px;
+  }
+  
+  .scale-info__item {
+    flex-direction: column;
+    width: auto;
   }
 }
 

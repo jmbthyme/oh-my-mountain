@@ -70,23 +70,49 @@
   opacity: 1;
 }
 
-/* Responsive design for different screen sizes */
+/* Enhanced responsive design for different screen sizes */
+@media (max-width: 1024px) {
+  .mountain-triangle-container {
+    margin: 8px;
+    padding: 6px;
+  }
+}
+
 @media (max-width: 768px) {
   .mountain-triangle-container {
-    margin: 5px;
+    margin: 6px;
     padding: 4px;
   }
-  
+
   .mountain-name-label {
     font-size: clamp(10px, 2.5vw, 14px) !important;
   }
-  
+
   .mountain-dimension-label {
     font-size: clamp(8px, 2vw, 12px) !important;
   }
-  
+
   .mountain-location-label {
     font-size: clamp(6px, 1.5vw, 10px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .mountain-triangle-container {
+    margin: 4px;
+    padding: 3px;
+  }
+
+  .mountain-name-label {
+    font-size: clamp(9px, 2.2vw, 13px) !important;
+  }
+
+  .mountain-dimension-label {
+    font-size: clamp(7px, 1.8vw, 11px) !important;
+  }
+
+  .mountain-location-label {
+    font-size: clamp(6px, 1.3vw, 9px) !important;
   }
 }
 
@@ -94,6 +120,74 @@
   .mountain-triangle-container {
     margin: 3px;
     padding: 2px;
+  }
+
+  .mountain-name-label {
+    font-size: clamp(8px, 2vw, 12px) !important;
+  }
+
+  .mountain-dimension-label {
+    font-size: clamp(6px, 1.6vw, 10px) !important;
+  }
+
+  .mountain-location-label {
+    font-size: clamp(5px, 1.2vw, 8px) !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .mountain-triangle-container {
+    margin: 2px;
+    padding: 1px;
+  }
+
+  .mountain-name-label {
+    font-size: clamp(7px, 1.8vw, 11px) !important;
+  }
+
+  .mountain-dimension-label {
+    font-size: clamp(5px, 1.4vw, 9px) !important;
+  }
+
+  .mountain-location-label {
+    font-size: clamp(4px, 1vw, 7px) !important;
+  }
+}
+
+/* Touch-friendly interactions for mobile devices */
+@media (hover: none) and (pointer: coarse) {
+  .mountain-triangle-container {
+    min-height: 44px;
+    min-width: 44px;
+    -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
+  }
+
+  .mountain-triangle-path {
+    cursor: pointer;
+  }
+
+  .mountain-triangle-container:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Landscape orientation adjustments for mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .mountain-triangle-container {
+    margin: 4px;
+    padding: 3px;
+  }
+
+  .mountain-name-label {
+    font-size: clamp(8px, 2vw, 12px) !important;
+  }
+
+  .mountain-dimension-label {
+    font-size: clamp(6px, 1.5vw, 10px) !important;
+  }
+
+  .mountain-location-label {
+    font-size: clamp(5px, 1.2vw, 8px) !important;
   }
 }
 
@@ -103,17 +197,17 @@
     stroke-width: 3;
     stroke: #000000;
   }
-  
+
   .mountain-name-label {
     fill: #000000;
     text-shadow: none;
   }
-  
+
   .height-label {
     fill: #ffffff;
     text-shadow: 2px 2px 0px #000000;
   }
-  
+
   .width-label,
   .mountain-location-label {
     fill: #000000;
@@ -122,6 +216,7 @@
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
+
   .mountain-triangle-container,
   .mountain-triangle-path,
   .mountain-name-label,
@@ -129,7 +224,7 @@
   .mountain-location-label {
     transition: none;
   }
-  
+
   .mountain-triangle-container:hover {
     transform: none;
   }
@@ -147,11 +242,11 @@
     break-inside: avoid;
     margin: 5px;
   }
-  
+
   .mountain-triangle-path {
     filter: none;
   }
-  
+
   .mountain-name-label,
   .mountain-dimension-label,
   .mountain-location-label {
