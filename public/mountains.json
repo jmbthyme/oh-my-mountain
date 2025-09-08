@@ -4,7 +4,7 @@
       "id": "tossa_montbui",
       "name": "Tossa de Montbui",
       "height": 627,
-      "width": 1000,
+      "shape": "dome-shaped",
       "country": "Spain",
       "region": "Catalonia"
     },
@@ -12,7 +12,7 @@
       "id": "aneto",
       "name": "Aneto",
       "height": 3403,
-      "width": 2000,
+      "shape": "ridge",
       "country": "Spain",
       "region": "Aragon"
     },
@@ -20,7 +20,7 @@
       "id": "everest",
       "name": "Mount Everest",
       "height": 8849,
-      "width": 5000,
+      "shape": "ridge",
       "country": "Nepal/China",
       "region": "Himalayas"
     },
@@ -28,7 +28,7 @@
       "id": "k2",
       "name": "K2",
       "height": 8611,
-      "width": 4200,
+      "shape": "ridge",
       "country": "Pakistan/China",
       "region": "Karakoram"
     },
@@ -36,7 +36,7 @@
       "id": "kangchenjunga",
       "name": "Kangchenjunga",
       "height": 8586,
-      "width": 4800,
+      "shape": "ridge",
       "country": "Nepal/India",
       "region": "Himalayas"
     },
@@ -44,7 +44,7 @@
       "id": "lhotse",
       "name": "Lhotse",
       "height": 8516,
-      "width": 3200,
+      "shape": "ridge",
       "country": "Nepal/China",
       "region": "Himalayas"
     },
@@ -52,7 +52,7 @@
       "id": "makalu",
       "name": "Makalu",
       "height": 8485,
-      "width": 3800,
+      "shape": "ridge",
       "country": "Nepal/China",
       "region": "Himalayas"
     },
@@ -60,7 +60,7 @@
       "id": "cho-oyu",
       "name": "Cho Oyu",
       "height": 8188,
-      "width": 4100,
+      "shape": "dome-shaped",
       "country": "Nepal/China",
       "region": "Himalayas"
     },
@@ -68,7 +68,7 @@
       "id": "dhaulagiri",
       "name": "Dhaulagiri I",
       "height": 8167,
-      "width": 3600,
+      "shape": "ridge",
       "country": "Nepal",
       "region": "Himalayas"
     },
@@ -76,7 +76,7 @@
       "id": "manaslu",
       "name": "Manaslu",
       "height": 8163,
-      "width": 3400,
+      "shape": "ridge",
       "country": "Nepal",
       "region": "Himalayas"
     },
@@ -84,7 +84,7 @@
       "id": "nanga-parbat",
       "name": "Nanga Parbat",
       "height": 8126,
-      "width": 4500,
+      "shape": "ridge",
       "country": "Pakistan",
       "region": "Himalayas"
     },
@@ -92,7 +92,7 @@
       "id": "annapurna",
       "name": "Annapurna I",
       "height": 8091,
-      "width": 3900,
+      "shape": "dome-shaped",
       "country": "Nepal",
       "region": "Himalayas"
     },
@@ -100,7 +100,7 @@
       "id": "gasherbrum-i",
       "name": "Gasherbrum I",
       "height": 8080,
-      "width": 3300,
+      "shape": "ridge",
       "country": "Pakistan/China",
       "region": "Karakoram"
     },
@@ -108,7 +108,7 @@
       "id": "broad-peak",
       "name": "Broad Peak",
       "height": 8051,
-      "width": 4000,
+      "shape": "ridge",
       "country": "Pakistan/China",
       "region": "Karakoram"
     },
@@ -116,7 +116,7 @@
       "id": "mont_blanc",
       "name": "Mont Blanc",
       "height": 4807,
-      "width": 2000,
+      "shape": "dome-shaped",
       "country": "France/Italy",
       "region": "Alps"
     },
@@ -124,7 +124,7 @@
       "id": "barre_des_ecrins",
       "name": "Barre des Écrins",
       "height": 4102,
-      "width": 1500,
+      "shape": "ridge",
       "country": "France",
       "region": "Alps"
     },
@@ -132,7 +132,7 @@
       "id": "grossglockner",
       "name": "Grossglockner",
       "height": 3798,
-      "width": 1800,
+      "shape": "ridge",
       "country": "Austria",
       "region": "Alps"
     },
@@ -140,7 +140,7 @@
       "id": "wildspitze",
       "name": "Wildspitze",
       "height": 3770,
-      "width": 1700,
+      "shape": "ridge",
       "country": "Austria",
       "region": "Alps"
     },
@@ -148,7 +148,7 @@
       "id": "matterhorn",
       "name": "Matterhorn",
       "height": 4478,
-      "width": 1600,
+      "shape": "ridge",
       "country": "Switzerland/Italy",
       "region": "Alps"
     },
@@ -156,7 +156,7 @@
       "id": "dufourspitze",
       "name": "Dufourspitze",
       "height": 4634,
-      "width": 1400,
+      "shape": "ridge",
       "country": "Switzerland",
       "region": "Alps"
     },
@@ -164,7 +164,7 @@
       "id": "zugspitze",
       "name": "Zugspitze",
       "height": 2962,
-      "width": 1200,
+      "shape": "ridge",
       "country": "Germany",
       "region": "Alps"
     },
@@ -172,9 +172,26 @@
       "id": "watzmann",
       "name": "Watzmann",
       "height": 2713,
-      "width": 1100,
+      "shape": "ridge",
       "country": "Germany",
       "region": "Alps"
+    },
+    {
+      "id": "mount-fuji",
+      "name": "Mount Fuji",
+      "height": 3776,
+      "shape": "conical",
+      "country": "Japan",
+      "region": "Honshu"
+    }
+    ,
+    {
+      "id": "kukenan",
+      "name": "Kukenán",
+      "height": 2680,
+      "shape": "plateau",
+      "country": "Venezuela",
+      "region": "Guayana Region"
     }
   ]
 }
