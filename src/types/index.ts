@@ -4,7 +4,7 @@
  */
 
 // Core data types
-export type { Mountain } from './Mountain';
+export type { Mountain, MountainWithCalculatedWidth } from './Mountain';
 export type { AppState } from './AppState';
 export type { ScaleConfig } from './ScaleConfig';
 
