@@ -31,3 +31,11 @@ export {
   generateMountainDescription,
   buildMountainAriaLabel,
 } from './accessibility';
+
+// Shape calculation utilities
+export {
+  MountainShape,
+  calculateWidth,
+  calculateWidthSafe,
+  type ShapeCalculationParams,
+} from './shapeCalculator';
