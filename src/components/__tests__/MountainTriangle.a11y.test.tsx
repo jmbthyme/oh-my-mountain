@@ -8,13 +8,15 @@ const axe = configureAxe({
   },
 });
 import MountainTriangle from '../MountainTriangle';
-import { Mountain } from '../../types';
+import { MountainWithCalculatedWidth } from '../../types';
+import { MountainShape } from '../../utils/shapeCalculator';
 
-const mockMountain: Mountain = {
+const mockMountain: MountainWithCalculatedWidth = {
   id: 'everest',
   name: 'Mount Everest',
   height: 8849,
   width: 5000,
+  shape: MountainShape.CONICAL,
   country: 'Nepal/China',
   region: 'Himalayas'
 };
@@ -76,7 +78,7 @@ describe('MountainTriangle Accessibility', () => {
     expect(title).toBeInTheDocument();
     expect(desc).toBeInTheDocument();
     expect(title).toHaveTextContent(/mount everest/i);
-    expect(desc).toHaveTextContent(/triangle.*8849.*5000/i);
+    expect(desc).toHaveTextContent(/triangle.*8849.*calculated width.*5000.*conical shape/i);
   });
 
   it('should support focus for keyboard users', () => {
@@ -99,6 +101,25 @@ describe('MountainTriangle Accessibility', () => {
     expect(container).toHaveAttribute('aria-label');
     
     const ariaLabel = container.getAttribute('aria-label');
-    expect(ariaLabel).toMatch(/mount everest.*8849.*5000/i);
+    expect(ariaLabel).toMatch(/mount everest.*8849.*calculated width.*5000.*conical shape/i);
+  });
+
+  it('should announce calculated width values for screen readers', () => {
+    render(
+      <MountainTriangle {...mockProps} />
+    );
+
+    // Check that width label includes calculated indicator
+    expect(screen.getByTestId('mountain-width')).toHaveTextContent(/5000.*\(calc\)/i);
+
+    // Check that accessibility labels mention calculated width
+    const container = screen.getByRole('button');
+    const ariaLabel = container.getAttribute('aria-label');
+    expect(ariaLabel).toMatch(/calculated width/i);
+
+    // Check SVG description mentions calculated width
+    const svg = screen.getByRole('img');
+    const desc = svg.querySelector('desc');
+    expect(desc).toHaveTextContent(/calculated width/i);
   });
 });

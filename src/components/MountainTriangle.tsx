@@ -65,7 +65,7 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
       data-testid={`triangle-${mountain.id}`}
       tabIndex={0}
       role="button"
-      aria-label={`${mountain.name} Mountain triangle showing ${mountain.name} with height ${mountain.height}m and width ${mountain.width}m`}
+      aria-label={`${mountain.name} Mountain triangle showing ${mountain.name} with height ${mountain.height}m and calculated width ${mountain.width}m based on ${mountain.shape} shape`}
     >
       <svg
         width={scaledWidth}
@@ -78,7 +78,7 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
         {/* Accessibility title and description */}
         <title id={titleId}>{mountain.name}</title>
         <desc id={descId}>
-          Mountain triangle showing {mountain.name} with height {mountain.height}m and width {mountain.width}m
+          Mountain triangle showing {mountain.name} with height {mountain.height}m and calculated width {mountain.width}m based on {mountain.shape} shape
         </desc>
 
         {/* Triangle path */}
@@ -119,7 +119,7 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
           {mountain.height.toLocaleString()}m
         </text>
 
-        {/* Width label positioned below name */}
+        {/* Width label positioned below name - shows calculated width */}
         <text
           x={widthLabelX}
           y={widthLabelY}
@@ -129,7 +129,7 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
           className="mountain-dimension-label width-label"
           data-testid="mountain-width"
         >
-          W: {mountain.width.toLocaleString()}m
+          W: {mountain.width.toLocaleString()}m (calc)
         </text>
 
         {/* Optional country/region info if available */}
@@ -156,6 +156,7 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
     prevProps.mountain.name === nextProps.mountain.name &&
     prevProps.mountain.height === nextProps.mountain.height &&
     prevProps.mountain.width === nextProps.mountain.width &&
+    prevProps.mountain.shape === nextProps.mountain.shape &&
     prevProps.mountain.country === nextProps.mountain.country &&
     prevProps.scale === nextProps.scale &&
     prevProps.maxDimensions?.maxHeight === nextProps.maxDimensions?.maxHeight &&

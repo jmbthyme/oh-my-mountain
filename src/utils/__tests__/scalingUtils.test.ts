@@ -4,7 +4,8 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import type { Mountain } from '../../types';
+import type { MountainWithCalculatedWidth } from '../../types';
+import { MountainShape } from '../shapeCalculator';
 import {
   calculateMaxDimensions,
   calculateContainerDimensions,
@@ -16,12 +17,13 @@ import {
 } from '../scalingUtils';
 
 // Test data
-const testMountains: Mountain[] = [
+const testMountains: MountainWithCalculatedWidth[] = [
   {
     id: 'everest',
     name: 'Mount Everest',
     height: 8849,
     width: 5000,
+    shape: MountainShape.CONICAL,
     country: 'Nepal/China',
     region: 'Himalayas',
   },
@@ -30,6 +32,7 @@ const testMountains: Mountain[] = [
     name: 'K2',
     height: 8611,
     width: 4200,
+    shape: MountainShape.CONICAL,
     country: 'Pakistan/China',
     region: 'Karakoram',
   },
@@ -38,6 +41,7 @@ const testMountains: Mountain[] = [
     name: 'Denali',
     height: 6190,
     width: 3500,
+    shape: MountainShape.DOME_SHAPED,
     country: 'USA',
     region: 'Alaska Range',
   },
@@ -67,9 +71,9 @@ describe('calculateMaxDimensions', () => {
   });
 
   it('should handle mountains with same dimensions', () => {
-    const sameMountains: Mountain[] = [
-      { id: '1', name: 'Mountain 1', height: 1000, width: 500 },
-      { id: '2', name: 'Mountain 2', height: 1000, width: 500 },
+    const sameMountains: MountainWithCalculatedWidth[] = [
+      { id: '1', name: 'Mountain 1', height: 1000, width: 500, shape: MountainShape.CONICAL },
+      { id: '2', name: 'Mountain 2', height: 1000, width: 500, shape: MountainShape.CONICAL },
     ];
     
     const result = calculateMaxDimensions(sameMountains);
@@ -83,29 +87,41 @@ describe('calculateContainerDimensions', () => {
   it('should calculate container dimensions with default padding', () => {
     const result = calculateContainerDimensions(1200, 800);
     
-    expect(result.containerWidth).toBe(820); // 1200 - 300 - 80
-    expect(result.containerHeight).toBe(520); // 800 - 200 - 80
+    // For viewport 1200x800: reservedWidth=300, reservedHeight=240, padding=40
+    // containerWidth = max(500, 1200 - 300 - 80) = max(500, 820) = 820
+    // containerHeight = max(300, 800 - 240 - 80) = max(300, 480) = 480
+    expect(result.containerWidth).toBe(820);
+    expect(result.containerHeight).toBe(480);
   });
 
   it('should calculate container dimensions with custom padding', () => {
     const result = calculateContainerDimensions(1200, 800, 60);
     
-    expect(result.containerWidth).toBe(780); // 1200 - 300 - 120
-    expect(result.containerHeight).toBe(480); // 800 - 200 - 120
+    // For viewport 1200x800: reservedWidth=300, reservedHeight=240, padding=60
+    // containerWidth = max(500, 1200 - 300 - 120) = max(500, 780) = 780
+    // containerHeight = max(300, 800 - 240 - 120) = max(300, 440) = 440
+    expect(result.containerWidth).toBe(780);
+    expect(result.containerHeight).toBe(440);
   });
 
   it('should enforce minimum dimensions', () => {
     const result = calculateContainerDimensions(400, 300);
     
-    expect(result.containerWidth).toBe(200); // Minimum enforced
-    expect(result.containerHeight).toBe(150); // Minimum enforced
+    // For viewport 400x300 (mobile): reservedWidth=40, reservedHeight=180, padding=20 (capped)
+    // containerWidth = max(280, 400 - 40 - 40) = max(280, 320) = 320
+    // containerHeight = max(200, 300 - 180 - 40) = max(200, 80) = 200
+    expect(result.containerWidth).toBe(320);
+    expect(result.containerHeight).toBe(200);
   });
 
   it('should handle very small viewport', () => {
     const result = calculateContainerDimensions(100, 100);
     
-    expect(result.containerWidth).toBe(200); // Minimum enforced
-    expect(result.containerHeight).toBe(150); // Minimum enforced
+    // For viewport 100x100 (mobile): reservedWidth=40, reservedHeight=180, padding=20 (capped)
+    // containerWidth = max(280, 100 - 40 - 40) = max(280, 20) = 280
+    // containerHeight = max(200, 100 - 180 - 40) = max(200, -120) = 200
+    expect(result.containerWidth).toBe(280);
+    expect(result.containerHeight).toBe(200);
   });
 });
 
@@ -161,7 +177,7 @@ describe('createScaleConfig', () => {
     expect(result.maxHeight).toBe(8849);
     expect(result.maxWidth).toBe(5000);
     expect(result.containerWidth).toBe(820);
-    expect(result.containerHeight).toBe(520);
+    expect(result.containerHeight).toBe(480);
   });
 
   it('should handle empty mountains array', () => {
@@ -170,24 +186,25 @@ describe('createScaleConfig', () => {
     expect(result.maxHeight).toBe(0);
     expect(result.maxWidth).toBe(0);
     expect(result.containerWidth).toBe(820);
-    expect(result.containerHeight).toBe(520);
+    expect(result.containerHeight).toBe(480);
   });
 
   it('should use custom padding', () => {
     const result = createScaleConfig(testMountains, 1200, 800, 60);
     
     expect(result.containerWidth).toBe(780);
-    expect(result.containerHeight).toBe(480);
+    expect(result.containerHeight).toBe(440);
   });
 });
 
 describe('generateTrianglePath', () => {
   it('should generate correct SVG path for triangle', () => {
-    const mountain: Mountain = {
+    const mountain: MountainWithCalculatedWidth = {
       id: 'test',
       name: 'Test Mountain',
       height: 100,
       width: 60,
+      shape: MountainShape.CONICAL,
     };
     
     const result = generateTrianglePath(mountain, 2);
@@ -198,11 +215,12 @@ describe('generateTrianglePath', () => {
   });
 
   it('should handle scale factor of 1', () => {
-    const mountain: Mountain = {
+    const mountain: MountainWithCalculatedWidth = {
       id: 'test',
       name: 'Test Mountain',
       height: 50,
       width: 30,
+      shape: MountainShape.CONICAL,
     };
     
     const result = generateTrianglePath(mountain, 1);
@@ -211,11 +229,12 @@ describe('generateTrianglePath', () => {
   });
 
   it('should handle fractional scale factors', () => {
-    const mountain: Mountain = {
+    const mountain: MountainWithCalculatedWidth = {
       id: 'test',
       name: 'Test Mountain',
       height: 100,
       width: 80,
+      shape: MountainShape.CONICAL,
     };
     
     const result = generateTrianglePath(mountain, 0.5);
@@ -225,11 +244,12 @@ describe('generateTrianglePath', () => {
   });
 
   it('should handle zero scale factor', () => {
-    const mountain: Mountain = {
+    const mountain: MountainWithCalculatedWidth = {
       id: 'test',
       name: 'Test Mountain',
       height: 100,
       width: 80,
+      shape: MountainShape.CONICAL,
     };
     
     const result = generateTrianglePath(mountain, 0);
@@ -240,11 +260,12 @@ describe('generateTrianglePath', () => {
 
 describe('calculateScaledDimensions', () => {
   it('should calculate scaled dimensions correctly', () => {
-    const mountain: Mountain = {
+    const mountain: MountainWithCalculatedWidth = {
       id: 'test',
       name: 'Test Mountain',
       height: 1000,
       width: 600,
+      shape: MountainShape.CONICAL,
     };
     
     const result = calculateScaledDimensions(mountain, 0.5);
@@ -254,11 +275,12 @@ describe('calculateScaledDimensions', () => {
   });
 
   it('should handle scale factor of 1', () => {
-    const mountain: Mountain = {
+    const mountain: MountainWithCalculatedWidth = {
       id: 'test',
       name: 'Test Mountain',
       height: 1000,
       width: 600,
+      shape: MountainShape.CONICAL,
     };
     
     const result = calculateScaledDimensions(mountain, 1);
@@ -268,11 +290,12 @@ describe('calculateScaledDimensions', () => {
   });
 
   it('should handle zero scale factor', () => {
-    const mountain: Mountain = {
+    const mountain: MountainWithCalculatedWidth = {
       id: 'test',
       name: 'Test Mountain',
       height: 1000,
       width: 600,
+      shape: MountainShape.CONICAL,
     };
     
     const result = calculateScaledDimensions(mountain, 0);
@@ -284,9 +307,9 @@ describe('calculateScaledDimensions', () => {
 
 describe('calculateSVGViewBox', () => {
   it('should calculate viewBox for multiple mountains', () => {
-    const mountains: Mountain[] = [
-      { id: '1', name: 'Mountain 1', height: 100, width: 60 },
-      { id: '2', name: 'Mountain 2', height: 80, width: 40 },
+    const mountains: MountainWithCalculatedWidth[] = [
+      { id: '1', name: 'Mountain 1', height: 100, width: 60, shape: MountainShape.CONICAL },
+      { id: '2', name: 'Mountain 2', height: 80, width: 40, shape: MountainShape.CONICAL },
     ];
     
     const result = calculateSVGViewBox(mountains, 1, 10);
@@ -297,8 +320,8 @@ describe('calculateSVGViewBox', () => {
   });
 
   it('should handle single mountain', () => {
-    const mountains: Mountain[] = [
-      { id: '1', name: 'Mountain 1', height: 100, width: 60 },
+    const mountains: MountainWithCalculatedWidth[] = [
+      { id: '1', name: 'Mountain 1', height: 100, width: 60, shape: MountainShape.CONICAL },
     ];
     
     const result = calculateSVGViewBox(mountains, 1, 10);
@@ -315,9 +338,9 @@ describe('calculateSVGViewBox', () => {
   });
 
   it('should apply scale factor correctly', () => {
-    const mountains: Mountain[] = [
-      { id: '1', name: 'Mountain 1', height: 100, width: 60 },
-      { id: '2', name: 'Mountain 2', height: 80, width: 40 },
+    const mountains: MountainWithCalculatedWidth[] = [
+      { id: '1', name: 'Mountain 1', height: 100, width: 60, shape: MountainShape.CONICAL },
+      { id: '2', name: 'Mountain 2', height: 80, width: 40, shape: MountainShape.CONICAL },
     ];
     
     const result = calculateSVGViewBox(mountains, 0.5, 10);
@@ -328,10 +351,10 @@ describe('calculateSVGViewBox', () => {
   });
 
   it('should handle custom spacing', () => {
-    const mountains: Mountain[] = [
-      { id: '1', name: 'Mountain 1', height: 100, width: 60 },
-      { id: '2', name: 'Mountain 2', height: 80, width: 40 },
-      { id: '3', name: 'Mountain 3', height: 90, width: 50 },
+    const mountains: MountainWithCalculatedWidth[] = [
+      { id: '1', name: 'Mountain 1', height: 100, width: 60, shape: MountainShape.CONICAL },
+      { id: '2', name: 'Mountain 2', height: 80, width: 40, shape: MountainShape.CONICAL },
+      { id: '3', name: 'Mountain 3', height: 90, width: 50, shape: MountainShape.CONICAL },
     ];
     
     const result = calculateSVGViewBox(mountains, 1, 25);

@@ -3,14 +3,14 @@
  * Requirements: 3.2, 3.3, 5.3
  */
 
-import type { Mountain, ScaleConfig } from '../types';
+import type { MountainWithCalculatedWidth, ScaleConfig } from '../types';
 
 /**
  * Calculate the maximum dimensions from a collection of mountains
  * @param mountains Array of mountains to analyze
  * @returns Object containing maximum height and width
  */
-export const calculateMaxDimensions = (mountains: Mountain[]): { maxHeight: number; maxWidth: number } => {
+export const calculateMaxDimensions = (mountains: MountainWithCalculatedWidth[]): { maxHeight: number; maxWidth: number } => {
   if (mountains.length === 0) {
     return { maxHeight: 0, maxWidth: 0 };
   }
@@ -107,7 +107,7 @@ export const calculateScaleFactor = (
  * @returns Complete scale configuration
  */
 export const createScaleConfig = (
-  mountains: Mountain[],
+  mountains: MountainWithCalculatedWidth[],
   viewportWidth: number,
   viewportHeight: number,
   padding?: number
@@ -133,7 +133,7 @@ export const createScaleConfig = (
  * @param scaleFactor Scale factor to apply to dimensions
  * @returns SVG path string for the triangle
  */
-export const generateTrianglePath = (mountain: Mountain, scaleFactor: number): string => {
+export const generateTrianglePath = (mountain: MountainWithCalculatedWidth, scaleFactor: number): string => {
   const scaledHeight = mountain.height * scaleFactor;
   const scaledWidth = mountain.width * scaleFactor;
 
@@ -156,7 +156,7 @@ export const generateTrianglePath = (mountain: Mountain, scaleFactor: number): s
  * @returns Scaled width and height
  */
 export const calculateScaledDimensions = (
-  mountain: Mountain,
+  mountain: MountainWithCalculatedWidth,
   scaleFactor: number
 ): { scaledWidth: number; scaledHeight: number } => {
   return {
@@ -173,7 +173,7 @@ export const calculateScaledDimensions = (
  * @returns ViewBox dimensions as string
  */
 export const calculateSVGViewBox = (
-  mountains: Mountain[],
+  mountains: MountainWithCalculatedWidth[],
   scaleFactor: number,
   spacing: number = 20
 ): string => {

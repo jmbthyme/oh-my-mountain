@@ -1,4 +1,4 @@
-import type { Mountain } from './Mountain';
+import type { Mountain, MountainWithCalculatedWidth } from './Mountain';
 
 /**
  * Component prop interfaces for type safety
@@ -25,8 +25,8 @@ export interface ComparisonViewProps {
 
 /** Props for the MountainTriangle component */
 export interface MountainTriangleProps {
-  /** Mountain data to render as triangle */
-  mountain: Mountain;
+  /** Mountain data to render as triangle (with calculated width) */
+  mountain: MountainWithCalculatedWidth;
   
   /** Scale factor for proportional sizing */
   scale: number;

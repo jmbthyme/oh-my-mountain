@@ -2,7 +2,8 @@ import React from 'react';
 import { render, screen, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import MountainTriangle from '../MountainTriangle';
-import type { Mountain } from '../../types';
+import type { MountainWithCalculatedWidth } from '../../types';
+import { MountainShape } from '../../utils/shapeCalculator';
 
 // Mock the scaling utilities
 vi.mock('../../utils', () => ({
@@ -16,11 +17,12 @@ vi.mock('../../utils', () => ({
 }));
 
 describe('MountainTriangle', () => {
-  const mockMountain: Mountain = {
+  const mockMountain: MountainWithCalculatedWidth = {
     id: 'everest',
     name: 'Mount Everest',
     height: 8849,
     width: 5000,
+    shape: MountainShape.CONICAL,
     country: 'Nepal/China',
     region: 'Himalayas',
   };
@@ -70,9 +72,9 @@ describe('MountainTriangle', () => {
     const heightLabel = document.querySelector('.height-label');
     expect(heightLabel).toHaveTextContent(/8[,]?849m/);
 
-    // Check width label specifically by class
+    // Check width label specifically by class - should show calculated width
     const widthLabel = document.querySelector('.width-label');
-    expect(widthLabel).toHaveTextContent(/W: 5[,]?000m/);
+    expect(widthLabel).toHaveTextContent(/W: 5[,]?000m \(calc\)/);
   });
 
   it('displays country information when available', () => {
@@ -82,7 +84,7 @@ describe('MountainTriangle', () => {
   });
 
   it('handles mountain without country gracefully', () => {
-    const mountainWithoutCountry: Mountain = {
+    const mountainWithoutCountry: MountainWithCalculatedWidth = {
       ...mockMountain,
       country: undefined,
     };
@@ -109,10 +111,9 @@ describe('MountainTriangle', () => {
     // Check for description
     expect(screen.getByText(/Mountain triangle showing Mount Everest/)).toBeInTheDocument();
 
-    // Check for focusable triangle (tabIndex becomes tabindex in DOM)
-    const trianglePath = document.querySelector('.mountain-triangle-path');
-    expect(trianglePath).toHaveAttribute('tabindex', '0');
-    expect(trianglePath).toHaveAttribute('role', 'button');
+    // Check for focusable container (tabIndex becomes tabindex in DOM)
+    const container = screen.getByRole('button');
+    expect(container).toHaveAttribute('tabindex', '0');
   });
 
   it('generates consistent colors for same mountain ID', () => {
@@ -137,7 +138,7 @@ describe('MountainTriangle', () => {
     const firstColor = firstTriangle?.getAttribute('fill');
 
     // Re-render with different mountain
-    const differentMountain: Mountain = {
+    const differentMountain: MountainWithCalculatedWidth = {
       ...mockMountain,
       id: 'k2',
       name: 'K2',
@@ -195,5 +196,27 @@ describe('MountainTriangle', () => {
     expect(document.querySelector('.mountain-name-label')).toBeInTheDocument();
     expect(document.querySelector('.height-label')).toBeInTheDocument();
     expect(document.querySelector('.width-label')).toBeInTheDocument();
+  });
+
+  it('displays calculated width information in accessibility labels', () => {
+    render(<MountainTriangle {...defaultProps} />);
+
+    const container = screen.getByRole('button');
+    const ariaLabel = container.getAttribute('aria-label');
+    
+    // Should mention calculated width and shape
+    expect(ariaLabel).toMatch(/calculated width.*conical shape/i);
+
+    // SVG description should also mention calculated width
+    const svg = screen.getByRole('img');
+    const desc = svg.querySelector('desc');
+    expect(desc).toHaveTextContent(/calculated width.*conical shape/i);
+  });
+
+  it('shows calculated width indicator in width label', () => {
+    render(<MountainTriangle {...defaultProps} />);
+
+    const widthLabel = document.querySelector('.width-label');
+    expect(widthLabel).toHaveTextContent(/\(calc\)/);
   });
 });
