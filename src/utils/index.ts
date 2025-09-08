@@ -39,3 +39,13 @@ export {
   calculateWidthSafe,
   type ShapeCalculationParams,
 } from './shapeCalculator';
+
+// Mountain data transformation utilities
+export {
+  transformMountainData,
+  transformMountainDataArray,
+  processRawMountainData,
+  loadAndTransformMountainData,
+  DataTransformationError,
+  type RawMountainData,
+} from './mountainDataTransformer';
