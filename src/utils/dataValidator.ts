@@ -1,9 +1,10 @@
 /**
  * Data validation utilities for mountain data
- * Requirements: 1.1, 1.3, 6.5
+ * Requirements: 1.1, 1.3, 6.5, 2.3, 2.4, 4.1, 4.2, 4.3, 4.4
  */
 
 import type { Mountain } from '../types/Mountain';
+import { MountainShape } from './shapeCalculator';
 
 export class ValidationError extends Error {
   constructor(message: string, public field?: string, public index?: number) {
@@ -31,6 +32,13 @@ function isValidPositiveNumber(value: unknown): value is number {
  */
 function isValidOptionalString(value: unknown): value is string | undefined {
   return value === undefined || isValidString(value);
+}
+
+/**
+ * Validates that a value is a valid MountainShape enum value
+ */
+function isValidMountainShape(value: unknown): value is MountainShape {
+  return typeof value === 'string' && Object.values(MountainShape).includes(value as MountainShape);
 }
 
 /**
@@ -75,10 +83,10 @@ export function validateMountain(mountain: unknown, index?: number): asserts mou
     );
   }
 
-  if (!isValidPositiveNumber(obj.width)) {
+  if (!isValidMountainShape(obj.shape)) {
     throw new ValidationError(
-      `Mountain width must be a positive number${index !== undefined ? ` at index ${index}` : ''}`,
-      'width',
+      `Mountain shape must be a valid MountainShape enum value${index !== undefined ? ` at index ${index}` : ''}`,
+      'shape',
       index
     );
   }
@@ -117,10 +125,10 @@ export function validateMountains(mountains: unknown[]): asserts mountains is Mo
 
   // Validate each mountain and check for duplicate IDs
   const seenIds = new Set<string>();
-  
+
   mountains.forEach((mountain, index) => {
     validateMountain(mountain, index);
-    
+
     const validatedMountain = mountain as Mountain;
     if (seenIds.has(validatedMountain.id)) {
       throw new ValidationError(
@@ -145,7 +153,7 @@ export function validateMountainData(data: unknown): Mountain[] {
   }
 
   const obj = data as Record<string, unknown>;
-  
+
   if (!('mountains' in obj)) {
     throw new ValidationError('Data must contain a "mountains" property');
   }

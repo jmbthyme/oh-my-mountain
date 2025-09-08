@@ -1,10 +1,10 @@
 /**
  * Data loading utilities for mountain data
- * Requirements: 1.1, 1.3, 5.1
+ * Requirements: 1.1, 1.3, 5.1, 2.3, 2.4, 4.1, 4.2, 4.3, 4.4
  */
 
-import type { Mountain } from '../types/Mountain';
-import { validateMountainData, ValidationError } from './dataValidator';
+import type { MountainWithCalculatedWidth } from '../types/Mountain';
+import { loadAndTransformMountainData, DataTransformationError } from './mountainDataTransformer';
 
 export class DataLoadError extends Error {
   constructor(message: string, public cause?: Error) {
@@ -14,33 +14,23 @@ export class DataLoadError extends Error {
 }
 
 /**
- * Loads mountain data from the public JSON file
- * @returns Promise that resolves to array of Mountain objects
- * @throws DataLoadError if loading or parsing fails
+ * Loads mountain data from the public JSON file with calculated widths
+ * @returns Promise that resolves to array of MountainWithCalculatedWidth objects
+ * @throws DataLoadError if loading, parsing, or transformation fails
  */
-export async function loadMountainData(): Promise<Mountain[]> {
+export async function loadMountainData(): Promise<MountainWithCalculatedWidth[]> {
   try {
-    const response = await fetch('/mountains.json');
+    // Use the data transformer which handles loading, validation, and width calculation
+    const mountainsWithCalculatedWidth = await loadAndTransformMountainData();
     
-    if (!response.ok) {
-      throw new DataLoadError(
-        `Failed to load mountain data: ${response.status} ${response.statusText}`
-      );
-    }
-
-    const data = await response.json();
-    
-    // Validate the loaded data
-    const validatedMountains = validateMountainData(data);
-    
-    return validatedMountains;
+    return mountainsWithCalculatedWidth;
   } catch (error) {
     if (error instanceof DataLoadError) {
       throw error;
     }
     
-    if (error instanceof ValidationError) {
-      throw new DataLoadError(`Data validation failed: ${error.message}`, error);
+    if (error instanceof DataTransformationError) {
+      throw new DataLoadError(`Data transformation failed: ${error.message}`, error);
     }
     
     if (error instanceof TypeError && (error.message.includes('fetch') || error.message.includes('Failed to fetch'))) {

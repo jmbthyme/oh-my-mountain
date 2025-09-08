@@ -5,13 +5,14 @@
 import { describe, it, expect } from 'vitest';
 import { validateMountain, validateMountains, validateMountainData, ValidationError } from '../dataValidator';
 import { Mountain } from '../../types/Mountain';
+import { MountainShape } from '../shapeCalculator';
 
 describe('dataValidator', () => {
   const validMountain: Mountain = {
     id: 'everest',
     name: 'Mount Everest',
     height: 8849,
-    width: 5000,
+    shape: MountainShape.CONICAL,
     country: 'Nepal/China',
     region: 'Himalayas',
   };
@@ -26,7 +27,7 @@ describe('dataValidator', () => {
         id: 'k2',
         name: 'K2',
         height: 8611,
-        width: 4200,
+        shape: MountainShape.DOME_SHAPED,
       };
       expect(() => validateMountain(minimalMountain)).not.toThrow();
     });
@@ -63,11 +64,11 @@ describe('dataValidator', () => {
       expect(() => validateMountain({ ...validMountain, height: NaN })).toThrow(ValidationError);
     });
 
-    it('should throw ValidationError for invalid width', () => {
-      expect(() => validateMountain({ ...validMountain, width: 0 })).toThrow(ValidationError);
-      expect(() => validateMountain({ ...validMountain, width: -100 })).toThrow(ValidationError);
-      expect(() => validateMountain({ ...validMountain, width: 'wide' })).toThrow(ValidationError);
-      expect(() => validateMountain({ ...validMountain, width: NaN })).toThrow(ValidationError);
+    it('should throw ValidationError for invalid shape', () => {
+      expect(() => validateMountain({ ...validMountain, shape: 'invalid-shape' })).toThrow(ValidationError);
+      expect(() => validateMountain({ ...validMountain, shape: 123 })).toThrow(ValidationError);
+      expect(() => validateMountain({ ...validMountain, shape: null })).toThrow(ValidationError);
+      expect(() => validateMountain({ ...validMountain, shape: undefined })).toThrow(ValidationError);
     });
 
     it('should throw ValidationError for invalid optional fields', () => {
