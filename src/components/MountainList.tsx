@@ -1,5 +1,6 @@
 import React from 'react';
 import type { MountainListProps } from '../types';
+import { generateAccessibilityIds, buildMountainAriaAttributes } from '../utils/accessibility';
 import './MountainList.css';
 
 /**
@@ -27,16 +28,16 @@ export const MountainList: React.FC<MountainListProps> = ({
   };
 
   return (
-    <div className="mountain-list">
+    <div className="mountain-list" data-testid="mountain-list">
       <div className="mountain-list__header">
         <h2>Available Mountains</h2>
-        <div className="mountain-list__selection-info">
+        <div className="mountain-list__selection-info" data-testid="selected-count">
           {selectedMountains.length} of {maxSelections} selected
         </div>
       </div>
       
       {isAtMaxSelections && (
-        <div className="mountain-list__warning" role="alert">
+        <div className="mountain-list__warning" role="alert" data-testid="toast">
           Maximum of {maxSelections} mountains can be selected for comparison
         </div>
       )}
@@ -45,6 +46,13 @@ export const MountainList: React.FC<MountainListProps> = ({
         {mountains.map((mountain) => {
           const isSelected = selectedIds.has(mountain.id);
           const isDisabled = !isSelected && isAtMaxSelections;
+          const accessibilityIds = generateAccessibilityIds(mountain.id);
+          const ariaAttributes = buildMountainAriaAttributes({
+            mountainId: mountain.id,
+            isSelected,
+            isDisabled,
+            useCheckboxRole: true,
+          });
           
           return (
             <div
@@ -54,31 +62,28 @@ export const MountainList: React.FC<MountainListProps> = ({
               } ${
                 isDisabled ? 'mountain-list__item--disabled' : ''
               }`}
+              data-testid={`mountain-item-${mountain.id}`}
               onClick={() => handleMountainClick(mountain)}
-              role="button"
-              tabIndex={isDisabled ? -1 : 0}
-              aria-pressed={isSelected}
-              aria-disabled={isDisabled}
+              {...ariaAttributes}
               onKeyDown={(e) => {
-                if ((e.key === 'Enter' || e.key === ' ') && !isDisabled) {
+                // Handle keyboard navigation for checkbox role
+                if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  handleMountainClick(mountain);
+                  if (!isDisabled) {
+                    handleMountainClick(mountain);
+                  }
                 }
               }}
             >
-              <div className="mountain-list__checkbox">
-                <input
-                  type="checkbox"
-                  checked={isSelected}
-                  onChange={() => {}} // Handled by parent click
-                  disabled={isDisabled}
-                  tabIndex={-1}
-                />
+              <div className="mountain-list__checkbox" aria-hidden="true">
+                <div className="mountain-list__checkbox-indicator"></div>
               </div>
               
               <div className="mountain-list__info">
-                <h3 className="mountain-list__name">{mountain.name}</h3>
-                <div className="mountain-list__details">
+                <h3 className="mountain-list__name" id={accessibilityIds.nameId}>
+                  {mountain.name}
+                </h3>
+                <div className="mountain-list__details" id={accessibilityIds.detailsId}>
                   <span className="mountain-list__height">
                     Height: {mountain.height}m
                   </span>
@@ -99,3 +104,5 @@ export const MountainList: React.FC<MountainListProps> = ({
     </div>
   );
 };
+
+export default MountainList;

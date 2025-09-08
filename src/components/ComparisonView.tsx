@@ -89,8 +89,8 @@ const ComparisonView: React.FC<ComparisonViewProps> = React.memo(({ selectedMoun
   // Handle empty state
   if (selectedMountains.length === 0) {
     return (
-      <div className="comparison-view comparison-view--empty">
-        <div className="empty-state">
+      <div className="comparison-view comparison-view--empty" data-testid="comparison-view">
+        <div className="empty-state" data-testid="empty-state">
           <div className="empty-state__icon">
             <svg
               width="64"
@@ -120,7 +120,7 @@ const ComparisonView: React.FC<ComparisonViewProps> = React.memo(({ selectedMoun
   // Handle single mountain selection with centered layout
   if (selectedMountains.length === 1) {
     return (
-      <div className="comparison-view comparison-view--single">
+      <div className="comparison-view comparison-view--single" data-testid="comparison-view">
         <div className="single-mountain-container">
           <MountainTriangle
             mountain={selectedMountains[0]}
@@ -140,7 +140,7 @@ const ComparisonView: React.FC<ComparisonViewProps> = React.memo(({ selectedMoun
 
 
   return (
-    <div className="comparison-view">
+    <div className="comparison-view" data-testid="comparison-view">
       <div className="comparison-header">
         <h2 className="comparison-title">
           Mountain Size Comparison ({selectedMountains.length} mountain{selectedMountains.length !== 1 ? 's' : ''})

@@ -50,7 +50,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
       // Default error UI
       return (
-        <div className="error-boundary">
+        <div className="error-boundary" data-testid="error-boundary">
           <div className="error-boundary__container">
             <div className="error-boundary__icon" role="img" aria-label="Error">
               ⚠️

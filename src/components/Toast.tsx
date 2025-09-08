@@ -70,6 +70,7 @@ export const Toast: React.FC<ToastProps> = ({
       } ${isExiting ? 'toast--exiting' : ''}`}
       role="alert"
       aria-live="polite"
+      data-testid="toast"
     >
       <div className="toast__icon" role="img" aria-label={`${type} notification`}>
         {getIcon()}

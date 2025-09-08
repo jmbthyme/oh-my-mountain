@@ -1,11 +1,11 @@
 import { useState, useCallback, Suspense, lazy } from 'react';
 import { useMountainData, useToast } from './hooks';
-import { 
-  Header, 
-  ErrorBoundary, 
+import {
+  Header,
+  ErrorBoundary,
   ToastContainer,
   MountainListSkeleton,
-  ComparisonViewSkeleton 
+  ComparisonViewSkeleton
 } from './components';
 import type { Mountain } from './types';
 import { measurePerformance } from './utils/performanceMonitor';
@@ -14,7 +14,7 @@ import './styles/responsive.css';
 import './styles/animations.css';
 
 // Lazy load components for better performance
-const MountainList = lazy(() => import('./components/MountainList').then(module => ({ default: module.MountainList })));
+const MountainList = lazy(() => import('./components/MountainList'));
 const ComparisonView = lazy(() => import('./components/ComparisonView'));
 
 /**
@@ -24,10 +24,10 @@ const ComparisonView = lazy(() => import('./components/ComparisonView'));
 function App() {
   // Load mountain data using custom hook
   const { mountains, loading, error, retry } = useMountainData();
-  
+
   // Toast notifications
   const { toasts, removeToast, showWarning, showError, showSuccess } = useToast();
-  
+
   // Global state for selected mountains
   const [selectedMountains, setSelectedMountains] = useState<Mountain[]>([]);
 
@@ -36,7 +36,7 @@ function App() {
     measurePerformance.measure('mountain-selection', () => {
       setSelectedMountains(prev => {
         const isSelected = prev.some(m => m.id === mountain.id);
-        
+
         if (isSelected) {
           // Remove mountain from selection
           showSuccess('Mountain removed', `${mountain.name} removed from comparison`);
@@ -45,7 +45,7 @@ function App() {
           // Add mountain to selection (max 10 mountains)
           if (prev.length >= 10) {
             showWarning(
-              'Selection limit reached', 
+              'Selection limit reached',
               'You can compare up to 10 mountains at once. Remove some mountains to add new ones.'
             );
             return prev; // Don't add if at maximum
@@ -73,7 +73,7 @@ function App() {
     return (
       <div className="app">
         <ErrorBoundary>
-          <Header selectedCount={0} onClearSelections={() => {}} />
+          <Header selectedCount={0} onClearSelections={() => { }} />
           <main className="app__main">
             <div className="app__container">
               <div className="app__sidebar">
@@ -96,22 +96,23 @@ function App() {
     if (toasts.length === 0) {
       showError('Failed to load data', error);
     }
-    
+
     return (
       <div className="app">
         <ErrorBoundary>
-          <div className="app__error">
+          <div className="app__error" data-testid="error-message" role="alert" aria-live="polite">
             <div className="error-icon" role="img" aria-label="Error">⚠️</div>
             <h2>Failed to Load Mountain Data</h2>
             <p className="error-message">{error}</p>
             <div className="error-actions">
-              <button 
-                className="retry-button" 
+              <button
+                className="retry-button"
                 onClick={() => {
                   retry();
                   showSuccess('Retrying...', 'Attempting to reload mountain data');
                 }}
                 type="button"
+                data-testid="retry-button"
               >
                 Try Again
               </button>
@@ -133,11 +134,11 @@ function App() {
   return (
     <div className="app">
       <ErrorBoundary>
-        <Header 
+        <Header
           selectedCount={selectedMountains.length}
           onClearSelections={handleClearSelections}
         />
-        
+
         <main className="app__main">
           <div className="app__container">
             <div className="app__sidebar">
@@ -156,7 +157,7 @@ function App() {
                 </Suspense>
               </ErrorBoundary>
             </div>
-            
+
             <div className="app__content">
               <ErrorBoundary fallback={
                 <div className="error-fallback">
@@ -172,7 +173,7 @@ function App() {
           </div>
         </main>
       </ErrorBoundary>
-      
+
       {/* Toast notifications */}
       <ToastContainer toasts={toasts} onRemoveToast={removeToast} />
     </div>

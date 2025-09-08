@@ -23,3 +23,11 @@ export {
   calculateScaledDimensions,
   calculateSVGViewBox,
 } from './scalingUtils';
+
+// Accessibility utilities
+export {
+  generateAccessibilityIds,
+  buildMountainAriaAttributes,
+  generateMountainDescription,
+  buildMountainAriaLabel,
+} from './accessibility';

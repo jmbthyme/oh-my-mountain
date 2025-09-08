@@ -24,7 +24,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="header">
+    <header className="header" data-testid="header">
       <div className="header__container">
         <div className="header__branding">
           <h1 className="header__title">
@@ -38,7 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
         
         <div className="header__controls">
           <div className="header__selection-info">
-            <span className="header__count">
+            <span className="header__count" data-testid="selected-count">
               {selectedCount} mountain{selectedCount !== 1 ? 's' : ''} selected
             </span>
           </div>
@@ -49,6 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={handleClearClick}
               type="button"
               aria-label={`Clear all ${selectedCount} selected mountains`}
+              data-testid="clear-all-button"
             >
               Clear All
             </button>

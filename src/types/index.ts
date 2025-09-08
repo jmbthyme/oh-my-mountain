@@ -15,3 +15,14 @@ export type {
   MountainTriangleProps,
   HeaderProps,
 } from './ComponentProps';
+
+// Accessibility interfaces
+export type {
+  AccessibilityProps,
+  AccessibilityIdConfig,
+  AccessibilityIds,
+  MountainAriaConfig,
+  MountainAccessibilityData,
+  AriaLabelConfig,
+  AccessibleMountainItemProps,
+} from './Accessibility';

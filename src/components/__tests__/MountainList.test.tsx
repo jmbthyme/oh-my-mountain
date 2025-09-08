@@ -77,8 +77,8 @@ describe('MountainList', () => {
     const mockToggle = vi.fn();
     render(<MountainList {...defaultProps} onMountainToggle={mockToggle} />);
     
-    const everestItem = screen.getAllByRole('button').find(button => 
-      button.textContent?.includes('Mount Everest')
+    const everestItem = screen.getAllByRole('checkbox').find(checkbox => 
+      checkbox.getAttribute('aria-labelledby')?.includes('everest')
     );
     
     expect(everestItem).toBeDefined();
@@ -91,8 +91,8 @@ describe('MountainList', () => {
     const mockToggle = vi.fn();
     render(<MountainList {...defaultProps} onMountainToggle={mockToggle} />);
     
-    const everestItem = screen.getAllByRole('button').find(button => 
-      button.textContent?.includes('Mount Everest')
+    const everestItem = screen.getAllByRole('checkbox').find(checkbox => 
+      checkbox.getAttribute('aria-labelledby')?.includes('everest')
     );
     
     expect(everestItem).toBeDefined();
@@ -105,8 +105,8 @@ describe('MountainList', () => {
     const mockToggle = vi.fn();
     render(<MountainList {...defaultProps} onMountainToggle={mockToggle} />);
     
-    const everestItem = screen.getAllByRole('button').find(button => 
-      button.textContent?.includes('Mount Everest')
+    const everestItem = screen.getAllByRole('checkbox').find(checkbox => 
+      checkbox.getAttribute('aria-labelledby')?.includes('everest')
     );
     
     expect(everestItem).toBeDefined();
@@ -121,11 +121,11 @@ describe('MountainList', () => {
     
     expect(screen.getByText('2 of 10 selected')).toBeInTheDocument();
     
-    // Check that checkboxes are checked for selected mountains
+    // Check that checkboxes have proper aria-checked state for selected mountains
     const checkboxes = screen.getAllByRole('checkbox');
-    expect(checkboxes[0]).toBeChecked(); // Mount Everest
-    expect(checkboxes[1]).toBeChecked(); // K2
-    expect(checkboxes[2]).not.toBeChecked(); // Kangchenjunga
+    expect(checkboxes[0]).toHaveAttribute('aria-checked', 'true'); // Mount Everest
+    expect(checkboxes[1]).toHaveAttribute('aria-checked', 'true'); // K2
+    expect(checkboxes[2]).toHaveAttribute('aria-checked', 'false'); // Kangchenjunga
   });
 
   it('shows warning message when maximum selections reached', () => {
@@ -168,8 +168,8 @@ describe('MountainList', () => {
     />);
     
     // Try to click the 11th mountain (not selected)
-    const eleventhMountain = screen.getAllByRole('button').find(button => 
-      button.textContent?.includes('Mountain 10')
+    const eleventhMountain = screen.getAllByRole('checkbox').find(checkbox => 
+      checkbox.getAttribute('aria-labelledby')?.includes('mountain-10')
     );
     
     expect(eleventhMountain).toBeDefined();
@@ -200,8 +200,8 @@ describe('MountainList', () => {
     />);
     
     // Click on a selected mountain to deselect it
-    const firstMountain = screen.getAllByRole('button').find(button => 
-      button.textContent?.includes('Mountain 0')
+    const firstMountain = screen.getAllByRole('checkbox').find(checkbox => 
+      checkbox.getAttribute('aria-labelledby')?.includes('mountain-0')
     );
     
     expect(firstMountain).toBeDefined();
@@ -215,20 +215,22 @@ describe('MountainList', () => {
     const selectedMountains = [mockMountains[0]];
     render(<MountainList {...defaultProps} selectedMountains={selectedMountains} />);
     
-    const mountainItems = screen.getAllByRole('button');
+    const mountainItems = screen.getAllByRole('checkbox');
     
     // Check first item (selected)
-    const selectedItem = mountainItems.find(button => 
-      button.textContent?.includes('Mount Everest')
+    const selectedItem = mountainItems.find(checkbox => 
+      checkbox.getAttribute('aria-labelledby')?.includes('everest')
     );
-    expect(selectedItem).toHaveAttribute('aria-pressed', 'true');
+    expect(selectedItem).toHaveAttribute('aria-checked', 'true');
     expect(selectedItem).toHaveAttribute('tabIndex', '0');
+    expect(selectedItem).toHaveAttribute('aria-labelledby');
+    expect(selectedItem).toHaveAttribute('aria-describedby');
     
     // Check second item (not selected)
-    const unselectedItem = mountainItems.find(button => 
-      button.textContent?.includes('K2')
+    const unselectedItem = mountainItems.find(checkbox => 
+      checkbox.getAttribute('aria-labelledby')?.includes('k2')
     );
-    expect(unselectedItem).toHaveAttribute('aria-pressed', 'false');
+    expect(unselectedItem).toHaveAttribute('aria-checked', 'false');
     expect(unselectedItem).toHaveAttribute('tabIndex', '0');
   });
 
@@ -250,14 +252,15 @@ describe('MountainList', () => {
       onMountainToggle={mockToggle} 
     />);
     
-    const disabledItem = screen.getAllByRole('button').find(button => 
-      button.textContent?.includes('Mountain 10')
+    const disabledItem = screen.getAllByRole('checkbox').find(checkbox => 
+      checkbox.getAttribute('aria-labelledby')?.includes('mountain-10')
     );
     
     expect(disabledItem).toBeDefined();
     
     // Should have tabIndex -1 when disabled
     expect(disabledItem).toHaveAttribute('tabIndex', '-1');
+    expect(disabledItem).toHaveAttribute('aria-disabled', 'true');
     
     // Keyboard events should not trigger toggle
     fireEvent.keyDown(disabledItem!, { key: 'Enter' });
@@ -272,6 +275,6 @@ describe('MountainList', () => {
     expect(screen.getByText('Available Mountains')).toBeInTheDocument();
     expect(screen.getByText('0 of 10 selected')).toBeInTheDocument();
     // Should not have any mountain items
-    expect(screen.queryAllByRole('button')).toHaveLength(0);
+    expect(screen.queryAllByRole('checkbox')).toHaveLength(0);
   });
 });

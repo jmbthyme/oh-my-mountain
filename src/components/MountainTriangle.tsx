@@ -60,7 +60,13 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
   const triangleColor = getTriangleColor(mountain.id);
 
   return (
-    <div className="mountain-triangle-container">
+    <div 
+      className="mountain-triangle-container" 
+      data-testid={`triangle-${mountain.id}`}
+      tabIndex={0}
+      role="button"
+      aria-label={`${mountain.name} Mountain triangle showing ${mountain.name} with height ${mountain.height}m and width ${mountain.width}m`}
+    >
       <svg
         width={scaledWidth}
         height={scaledHeight + baseFontSize + labelFontSize + 20}
@@ -83,9 +89,6 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
           stroke="#1f2937"
           strokeWidth="2"
           className="mountain-triangle-path"
-          tabIndex={0}
-          role="button"
-          aria-label={`${mountain.name} triangle`}
         />
 
         {/* Mountain name label */}
@@ -97,6 +100,7 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
           fill="#1f2937"
           className="mountain-name-label"
           fontWeight="600"
+          data-testid="mountain-name"
         >
           {mountain.name}
         </text>
@@ -110,6 +114,7 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
           fill="white"
           className="mountain-dimension-label height-label"
           fontWeight="500"
+          data-testid="mountain-height"
         >
           {mountain.height.toLocaleString()}m
         </text>
@@ -122,6 +127,7 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
           fontSize={labelFontSize}
           fill="#6b7280"
           className="mountain-dimension-label width-label"
+          data-testid="mountain-width"
         >
           W: {mountain.width.toLocaleString()}m
         </text>
