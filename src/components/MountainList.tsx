@@ -1,5 +1,6 @@
 import React from 'react';
 import type { MountainListProps } from '../types';
+import type { MountainWithCalculatedWidth } from '../types/Mountain';
 import { generateAccessibilityIds, buildMountainAriaAttributes } from '../utils/accessibility';
 import './MountainList.css';
 
@@ -16,7 +17,7 @@ export const MountainList: React.FC<MountainListProps> = ({
   const maxSelections = 10;
   const isAtMaxSelections = selectedMountains.length >= maxSelections;
 
-  const handleMountainClick = (mountain: any) => {
+  const handleMountainClick = (mountain: MountainWithCalculatedWidth) => {
     const isSelected = selectedIds.has(mountain.id);
     
     // If not selected and at max limit, don't allow selection
@@ -85,10 +86,13 @@ export const MountainList: React.FC<MountainListProps> = ({
                 </h3>
                 <div className="mountain-list__details" id={accessibilityIds.detailsId}>
                   <span className="mountain-list__height">
-                    Height: {mountain.height}m
+                    Height: {mountain.height.toLocaleString()}m
                   </span>
                   <span className="mountain-list__width">
-                    Width: {mountain.width}m
+                    Width: {Math.round(mountain.width).toLocaleString()}m (calculated)
+                  </span>
+                  <span className="mountain-list__shape">
+                    Shape: {mountain.shape.replace('-', ' ')}
                   </span>
                   {mountain.country && (
                     <span className="mountain-list__location">

@@ -7,20 +7,20 @@ import type { Mountain, MountainWithCalculatedWidth } from './Mountain';
 
 /** Props for the MountainList component */
 export interface MountainListProps {
-  /** Array of all available mountains */
-  mountains: Mountain[];
+  /** Array of all available mountains with calculated widths */
+  mountains: MountainWithCalculatedWidth[];
   
-  /** Array of currently selected mountains */
-  selectedMountains: Mountain[];
+  /** Array of currently selected mountains with calculated widths */
+  selectedMountains: MountainWithCalculatedWidth[];
   
   /** Callback function when a mountain is toggled (selected/deselected) */
-  onMountainToggle: (mountain: Mountain) => void;
+  onMountainToggle: (mountain: MountainWithCalculatedWidth) => void;
 }
 
 /** Props for the ComparisonView component */
 export interface ComparisonViewProps {
-  /** Array of selected mountains to display as triangles */
-  selectedMountains: Mountain[];
+  /** Array of selected mountains to display as triangles with calculated widths */
+  selectedMountains: MountainWithCalculatedWidth[];
 }
 
 /** Props for the MountainTriangle component */

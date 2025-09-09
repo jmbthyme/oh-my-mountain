@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import type { ComparisonViewProps } from '../types';
+import type { MountainWithCalculatedWidth } from '../types/Mountain';
 import MountainTriangle from './MountainTriangle';
 import { 
   calculateMaxDimensions, 

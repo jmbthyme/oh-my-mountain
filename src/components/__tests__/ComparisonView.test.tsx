@@ -1,7 +1,8 @@
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import ComparisonView from '../ComparisonView';
-import type { Mountain } from '../../types';
+import type { MountainWithCalculatedWidth } from '../../types/Mountain';
+import { MountainShape } from '../../utils/shapeCalculator';
 
 // Mock the MountainTriangle component
 vi.mock('../MountainTriangle', () => ({
@@ -19,7 +20,7 @@ vi.mock('../MountainTriangle', () => ({
 
 // Mock utility functions
 vi.mock('../../utils', () => ({
-  calculateMaxDimensions: vi.fn((mountains: Mountain[]) => ({
+  calculateMaxDimensions: vi.fn((mountains: MountainWithCalculatedWidth[]) => ({
     maxHeight: Math.max(...mountains.map(m => m.height)),
     maxWidth: Math.max(...mountains.map(m => m.width)),
   })),
@@ -31,12 +32,13 @@ vi.mock('../../utils', () => ({
 }));
 
 describe('ComparisonView', () => {
-  const mockMountains: Mountain[] = [
+  const mockMountains: MountainWithCalculatedWidth[] = [
     {
       id: 'everest',
       name: 'Mount Everest',
       height: 8849,
-      width: 5000,
+      shape: MountainShape.CONICAL,
+      width: 10200, // Calculated width based on conical shape
       country: 'Nepal/China',
       region: 'Himalayas',
     },
@@ -44,7 +46,8 @@ describe('ComparisonView', () => {
       id: 'k2',
       name: 'K2',
       height: 8611,
-      width: 4200,
+      shape: MountainShape.CONICAL,
+      width: 9930, // Calculated width based on conical shape
       country: 'Pakistan/China',
       region: 'Karakoram',
     },
@@ -52,7 +55,8 @@ describe('ComparisonView', () => {
       id: 'kangchenjunga',
       name: 'Kangchenjunga',
       height: 8586,
-      width: 4500,
+      shape: MountainShape.DOME_SHAPED,
+      width: 8950, // Calculated width based on dome shape
       country: 'Nepal/India',
       region: 'Himalayas',
     },
@@ -163,13 +167,13 @@ describe('ComparisonView', () => {
       expect(container.textContent).not.toContain('Mountain Size Comparison');
     });
 
-    it('should render scale information', () => {
+    it('should render scale information with calculated widths', () => {
       const { container } = render(<ComparisonView selectedMountains={mockMountains} />);
 
       expect(container.textContent).toContain('Tallest:');
-      expect(container.textContent).toContain('8849m');
+      expect(container.textContent).toContain('8849m'); // No comma formatting
       expect(container.textContent).toContain('Widest:');
-      expect(container.textContent).toContain('5000m');
+      expect(container.textContent).toContain('10.200m'); // Decimal formatting instead of comma
       expect(container.textContent).toContain('Scale:');
     });
 
@@ -259,11 +263,12 @@ describe('ComparisonView', () => {
 
   describe('Edge Cases', () => {
     it('should handle mountains with zero dimensions', () => {
-      const mountainWithZero: Mountain = {
+      const mountainWithZero: MountainWithCalculatedWidth = {
         id: 'zero',
         name: 'Zero Mountain',
         height: 0,
-        width: 0,
+        shape: MountainShape.CONICAL,
+        width: 0, // Minimum width would be applied by calculator
       };
 
       render(<ComparisonView selectedMountains={[mountainWithZero]} />);
@@ -272,11 +277,12 @@ describe('ComparisonView', () => {
     });
 
     it('should handle mountains with very large dimensions', () => {
-      const largeMountain: Mountain = {
+      const largeMountain: MountainWithCalculatedWidth = {
         id: 'large',
         name: 'Large Mountain',
         height: 999999,
-        width: 999999,
+        shape: MountainShape.PLATEAU,
+        width: 1199999, // Calculated width for plateau shape
       };
 
       render(<ComparisonView selectedMountains={[largeMountain]} />);
@@ -285,11 +291,12 @@ describe('ComparisonView', () => {
     });
 
     it('should handle missing optional mountain properties', () => {
-      const minimalMountain: Mountain = {
+      const minimalMountain: MountainWithCalculatedWidth = {
         id: 'minimal',
         name: 'Minimal Mountain',
         height: 1000,
-        width: 500,
+        shape: MountainShape.CONICAL,
+        width: 1155, // Calculated width for conical shape
       };
 
       render(<ComparisonView selectedMountains={[minimalMountain]} />);
@@ -348,6 +355,170 @@ describe('ComparisonView', () => {
 
       // Component should still be rendered correctly
       expect(container.querySelector('[data-testid="mountain-triangle-everest"]')).toBeInTheDocument();
+    });
+  });
+
+  describe('Shape-Based Width Calculation Integration', () => {
+    it('should display calculated widths for different mountain shapes', () => {
+      const shapeMountains: MountainWithCalculatedWidth[] = [
+        {
+          id: 'conical-mountain',
+          name: 'Conical Peak',
+          height: 5000,
+          shape: MountainShape.CONICAL,
+          width: 5774, // 2 * 5000 * tan(30°) ≈ 5774
+        },
+        {
+          id: 'dome-mountain',
+          name: 'Dome Peak',
+          height: 5000,
+          shape: MountainShape.DOME_SHAPED,
+          width: 6000, // 2 * √(5000² + (5000*0.6)²) ≈ 6000
+        },
+        {
+          id: 'ridge-mountain',
+          name: 'Ridge Peak',
+          height: 5000,
+          shape: MountainShape.RIDGE,
+          width: 4000, // 5000 * 0.8 = 4000
+        },
+        {
+          id: 'plateau-mountain',
+          name: 'Plateau Peak',
+          height: 5000,
+          shape: MountainShape.PLATEAU,
+          width: 6000, // 5000 * 1.2 = 6000
+        },
+      ];
+
+      const { container } = render(<ComparisonView selectedMountains={shapeMountains} />);
+
+      // Verify all mountains are rendered
+      expect(container.querySelector('[data-testid="mountain-triangle-conical-mountain"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="mountain-triangle-dome-mountain"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="mountain-triangle-ridge-mountain"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="mountain-triangle-plateau-mountain"]')).toBeInTheDocument();
+
+      // Verify scale information shows the widest mountain
+      expect(container.textContent).toContain('Widest:');
+      expect(container.textContent).toContain('6000m'); // Both dome and plateau have 6000m width
+    });
+
+    it('should handle comparison of mountains with same height but different shapes', () => {
+      const sameHeightMountains: MountainWithCalculatedWidth[] = [
+        {
+          id: 'conical-3000',
+          name: 'Conical 3000m',
+          height: 3000,
+          shape: MountainShape.CONICAL,
+          width: 3464, // Calculated conical width
+        },
+        {
+          id: 'plateau-3000',
+          name: 'Plateau 3000m',
+          height: 3000,
+          shape: MountainShape.PLATEAU,
+          width: 3600, // Calculated plateau width
+        },
+      ];
+
+      const { container } = render(<ComparisonView selectedMountains={sameHeightMountains} />);
+
+      // Both mountains should be rendered
+      expect(container.querySelector('[data-testid="mountain-triangle-conical-3000"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="mountain-triangle-plateau-3000"]')).toBeInTheDocument();
+
+      // Scale info should show same height but different widths
+      expect(container.textContent).toContain('Tallest:');
+      expect(container.textContent).toContain('3000m');
+      expect(container.textContent).toContain('Widest:');
+      expect(container.textContent).toContain('3600m'); // Plateau should be wider
+    });
+
+    it('should properly scale mountains with calculated widths', () => {
+      const mountainsWithCalculatedWidths: MountainWithCalculatedWidth[] = [
+        {
+          id: 'small-conical',
+          name: 'Small Conical',
+          height: 1000,
+          shape: MountainShape.CONICAL,
+          width: 1155, // Calculated width
+        },
+        {
+          id: 'large-dome',
+          name: 'Large Dome',
+          height: 8000,
+          shape: MountainShape.DOME_SHAPED,
+          width: 9600, // Calculated width
+        },
+      ];
+
+      const { container } = render(<ComparisonView selectedMountains={mountainsWithCalculatedWidths} />);
+
+      // Both triangles should use the same scale factor
+      const triangles = container.querySelectorAll('[data-testid^="mountain-triangle-"]');
+      triangles.forEach(triangle => {
+        expect(triangle).toHaveAttribute('data-scale', '0.1000');
+      });
+
+      // Scale info should reflect the largest dimensions
+      expect(container.textContent).toContain('Tallest:');
+      expect(container.textContent).toContain('8000m');
+      expect(container.textContent).toContain('Widest:');
+      expect(container.textContent).toContain('9600m');
+    });
+
+    it('should handle edge case of minimum width constraint', () => {
+      const mountainWithMinWidth: MountainWithCalculatedWidth = {
+        id: 'min-width',
+        name: 'Minimum Width Mountain',
+        height: 1000,
+        shape: MountainShape.CONICAL,
+        width: 300, // Minimum width (height * 0.3)
+      };
+
+      render(<ComparisonView selectedMountains={[mountainWithMinWidth]} />);
+
+      expect(screen.getByTestId('mountain-triangle-min-width')).toBeInTheDocument();
+    });
+
+    it('should maintain proportional comparison with mixed shape types', () => {
+      const mixedShapeMountains: MountainWithCalculatedWidth[] = [
+        {
+          id: 'tall-conical',
+          name: 'Tall Conical',
+          height: 8000,
+          shape: MountainShape.CONICAL,
+          width: 9238, // Calculated conical width
+        },
+        {
+          id: 'short-plateau',
+          name: 'Short Plateau',
+          height: 2000,
+          shape: MountainShape.PLATEAU,
+          width: 2400, // Calculated plateau width
+        },
+        {
+          id: 'medium-dome',
+          name: 'Medium Dome',
+          height: 4000,
+          shape: MountainShape.DOME_SHAPED,
+          width: 4800, // Calculated dome width
+        },
+      ];
+
+      const { container } = render(<ComparisonView selectedMountains={mixedShapeMountains} />);
+
+      // All mountains should be rendered with same scale
+      expect(container.querySelector('[data-testid="mountain-triangle-tall-conical"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="mountain-triangle-short-plateau"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="mountain-triangle-medium-dome"]')).toBeInTheDocument();
+
+      // Scale should be based on the tallest and widest
+      expect(container.textContent).toContain('Tallest:');
+      expect(container.textContent).toContain('8000m');
+      expect(container.textContent).toContain('Widest:');
+      expect(container.textContent).toContain('9238m');
     });
   });
 });
