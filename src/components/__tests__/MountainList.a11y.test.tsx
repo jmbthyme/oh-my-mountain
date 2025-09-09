@@ -8,14 +8,16 @@ const axe = configureAxe({
   },
 });
 import { MountainList } from '../MountainList';
-import { Mountain } from '../../types';
+import { MountainWithCalculatedWidth } from '../../types/Mountain';
+import { MountainShape } from '../../utils/shapeCalculator';
 
-const mockMountains: Mountain[] = [
+const mockMountains: MountainWithCalculatedWidth[] = [
   {
     id: 'everest',
     name: 'Mount Everest',
     height: 8849,
     width: 5000,
+    shape: MountainShape.CONICAL,
     country: 'Nepal/China',
     region: 'Himalayas'
   },
@@ -24,6 +26,7 @@ const mockMountains: Mountain[] = [
     name: 'K2',
     height: 8611,
     width: 4200,
+    shape: MountainShape.CONICAL,
     country: 'Pakistan/China',
     region: 'Karakoram'
   }
@@ -127,7 +130,8 @@ describe('MountainList Accessibility', () => {
       id: `mountain-${i}`,
       name: `Mountain ${i}`,
       height: 8000 + i,
-      width: 4000 + i
+      width: 4000 + i,
+      shape: MountainShape.CONICAL
     }));
     
     const tenSelected = elevenMountains.slice(0, 10);

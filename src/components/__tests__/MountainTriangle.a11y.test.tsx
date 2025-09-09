@@ -78,7 +78,7 @@ describe('MountainTriangle Accessibility', () => {
     expect(title).toBeInTheDocument();
     expect(desc).toBeInTheDocument();
     expect(title).toHaveTextContent(/mount everest/i);
-    expect(desc).toHaveTextContent(/triangle.*8849.*calculated width.*5000.*conical shape/i);
+    expect(desc).toHaveTextContent(/mount everest.*triangle.*visualization.*height.*8849.*base width.*5000.*conical.*geological shape/i);
   });
 
   it('should support focus for keyboard users', () => {
@@ -101,7 +101,7 @@ describe('MountainTriangle Accessibility', () => {
     expect(container).toHaveAttribute('aria-label');
     
     const ariaLabel = container.getAttribute('aria-label');
-    expect(ariaLabel).toMatch(/mount everest.*8849.*calculated width.*5000.*conical shape/i);
+    expect(ariaLabel).toMatch(/mount everest.*triangle.*visualization.*height.*8849.*base width.*5000.*conical.*geological shape/i);
   });
 
   it('should announce calculated width values for screen readers', () => {
@@ -115,11 +115,11 @@ describe('MountainTriangle Accessibility', () => {
     // Check that accessibility labels mention calculated width
     const container = screen.getByRole('button');
     const ariaLabel = container.getAttribute('aria-label');
-    expect(ariaLabel).toMatch(/calculated width/i);
+    expect(ariaLabel).toMatch(/base width.*calculated/i);
 
     // Check SVG description mentions calculated width
     const svg = screen.getByRole('img');
     const desc = svg.querySelector('desc');
-    expect(desc).toHaveTextContent(/calculated width/i);
+    expect(desc).toHaveTextContent(/base width.*calculated/i);
   });
 });

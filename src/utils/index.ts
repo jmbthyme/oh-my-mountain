@@ -29,6 +29,8 @@ export {
   generateAccessibilityIds,
   buildMountainAriaAttributes,
   generateMountainDescription,
+  generateMountainDescriptionForScreenReader,
+  generateMountainTriangleDescription,
   buildMountainAriaLabel,
 } from './accessibility';
 

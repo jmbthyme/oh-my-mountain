@@ -1,7 +1,7 @@
 import React from 'react';
 import type { MountainListProps } from '../types';
 import type { MountainWithCalculatedWidth } from '../types/Mountain';
-import { generateAccessibilityIds, buildMountainAriaAttributes } from '../utils/accessibility';
+import { generateAccessibilityIds, buildMountainAriaAttributes, buildMountainAriaLabel } from '../utils/accessibility';
 import './MountainList.css';
 
 /**
@@ -55,6 +55,15 @@ export const MountainList: React.FC<MountainListProps> = ({
             useCheckboxRole: true,
           });
           
+          const ariaLabel = buildMountainAriaLabel({
+            mountainName: mountain.name,
+            height: mountain.height,
+            width: mountain.width,
+            shape: mountain.shape,
+            country: mountain.country,
+            isSelected,
+          });
+          
           return (
             <div
               key={mountain.id}
@@ -66,6 +75,7 @@ export const MountainList: React.FC<MountainListProps> = ({
               data-testid={`mountain-item-${mountain.id}`}
               onClick={() => handleMountainClick(mountain)}
               {...ariaAttributes}
+              aria-label={ariaLabel}
               onKeyDown={(e) => {
                 // Handle keyboard navigation for checkbox role
                 if (e.key === 'Enter' || e.key === ' ') {

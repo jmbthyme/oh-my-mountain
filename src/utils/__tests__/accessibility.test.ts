@@ -2,7 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { 
   generateAccessibilityIds, 
   buildMountainAriaAttributes, 
-  generateMountainDescription, 
+  generateMountainDescription,
+  generateMountainDescriptionForScreenReader,
+  generateMountainTriangleDescription,
   buildMountainAriaLabel 
 } from '../accessibility';
 
@@ -157,157 +159,270 @@ describe('Accessibility Utility Functions', () => {
   });
 
   describe('generateMountainDescription', () => {
-    it('should generate description with height and width', () => {
+    it('should generate description with height, calculated width, and shape', () => {
       const mountain = {
         height: 8849,
         width: 5000,
+        shape: 'conical',
       };
       
       const description = generateMountainDescription(mountain);
-      expect(description).toBe('Height: 8849m, Width: 5000m');
+      expect(description).toBe('Height: 8849m, Calculated width: 5000m, Shape: conical');
     });
 
     it('should include country when provided', () => {
       const mountain = {
         height: 8849,
         width: 5000,
+        shape: 'conical',
         country: 'Nepal/China',
       };
       
       const description = generateMountainDescription(mountain);
-      expect(description).toBe('Height: 8849m, Width: 5000m, Location: Nepal/China');
+      expect(description).toBe('Height: 8849m, Calculated width: 5000m, Shape: conical, Location: Nepal/China');
     });
 
-    it('should handle missing country gracefully', () => {
+    it('should handle dome-shaped mountains', () => {
       const mountain = {
         height: 8611,
         width: 4200,
+        shape: 'dome-shaped',
       };
       
       const description = generateMountainDescription(mountain);
-      expect(description).toBe('Height: 8611m, Width: 4200m');
+      expect(description).toBe('Height: 8611m, Calculated width: 4200m, Shape: dome shaped');
+    });
+
+    it('should round calculated width values', () => {
+      const mountain = {
+        height: 8000,
+        width: 4567.89,
+        shape: 'ridge',
+        country: 'Test Country',
+      };
+      
+      const description = generateMountainDescription(mountain);
+      expect(description).toBe('Height: 8000m, Calculated width: 4568m, Shape: ridge, Location: Test Country');
     });
 
     it('should handle zero values correctly', () => {
       const mountain = {
         height: 0,
         width: 0,
+        shape: 'plateau',
         country: 'Test Country',
       };
       
       const description = generateMountainDescription(mountain);
-      expect(description).toBe('Height: 0m, Width: 0m, Location: Test Country');
-    });
-
-    it('should handle large numbers correctly', () => {
-      const mountain = {
-        height: 999999,
-        width: 888888,
-      };
-      
-      const description = generateMountainDescription(mountain);
-      expect(description).toBe('Height: 999999m, Width: 888888m');
+      expect(description).toBe('Height: 0m, Calculated width: 0m, Shape: plateau, Location: Test Country');
     });
 
     it('should handle empty country string', () => {
       const mountain = {
         height: 5000,
         width: 3000,
+        shape: 'conical',
         country: '',
       };
       
       const description = generateMountainDescription(mountain);
       // Empty string should be treated as falsy and not included
-      expect(description).toBe('Height: 5000m, Width: 3000m');
+      expect(description).toBe('Height: 5000m, Calculated width: 3000m, Shape: conical');
+    });
+  });
+
+  describe('generateMountainDescriptionForScreenReader', () => {
+    it('should generate detailed description for screen readers', () => {
+      const mountain = {
+        height: 8849,
+        width: 5000,
+        shape: 'conical',
+        country: 'Nepal/China',
+      };
+      
+      const description = generateMountainDescriptionForScreenReader(mountain);
+      expect(description).toBe('Height: 8849 meters. Width: 5000 meters, calculated based on conical shape. Located in Nepal/China.');
+    });
+
+    it('should handle dome-shaped mountains with proper formatting', () => {
+      const mountain = {
+        height: 4807,
+        width: 3200.67,
+        shape: 'dome-shaped',
+      };
+      
+      const description = generateMountainDescriptionForScreenReader(mountain);
+      expect(description).toBe('Height: 4807 meters. Width: 3201 meters, calculated based on dome shaped shape.');
+    });
+
+    it('should handle mountains without country information', () => {
+      const mountain = {
+        height: 7000,
+        width: 4500,
+        shape: 'ridge',
+      };
+      
+      const description = generateMountainDescriptionForScreenReader(mountain);
+      expect(description).toBe('Height: 7000 meters. Width: 4500 meters, calculated based on ridge shape.');
+    });
+
+    it('should format large numbers with locale-specific separators', () => {
+      const mountain = {
+        height: 12345,
+        width: 98765,
+        shape: 'plateau',
+        country: 'Test Country',
+      };
+      
+      const description = generateMountainDescriptionForScreenReader(mountain);
+      expect(description).toBe('Height: 12.345 meters. Width: 98.765 meters, calculated based on plateau shape. Located in Test Country.');
+    });
+  });
+
+  describe('generateMountainTriangleDescription', () => {
+    it('should generate comprehensive triangle visualization description', () => {
+      const mountain = {
+        name: 'Mount Everest',
+        height: 8849,
+        width: 5000,
+        shape: 'conical',
+        country: 'Nepal/China',
+      };
+      
+      const description = generateMountainTriangleDescription(mountain);
+      expect(description).toBe('Mount Everest mountain triangle visualization. Height: 8849 meters. Base width: 5000 meters, calculated from conical geological shape. Located in Nepal/China. Triangle represents proportional mountain dimensions for comparison.');
+    });
+
+    it('should handle dome-shaped mountains', () => {
+      const mountain = {
+        name: 'Mont Blanc',
+        height: 4807,
+        width: 3200.89,
+        shape: 'dome-shaped',
+      };
+      
+      const description = generateMountainTriangleDescription(mountain);
+      expect(description).toBe('Mont Blanc mountain triangle visualization. Height: 4807 meters. Base width: 3201 meters, calculated from dome shaped geological shape. Triangle represents proportional mountain dimensions for comparison.');
+    });
+
+    it('should handle mountains without country information', () => {
+      const mountain = {
+        name: 'Test Peak',
+        height: 6000,
+        width: 4000,
+        shape: 'ridge',
+      };
+      
+      const description = generateMountainTriangleDescription(mountain);
+      expect(description).toBe('Test Peak mountain triangle visualization. Height: 6000 meters. Base width: 4000 meters, calculated from ridge geological shape. Triangle represents proportional mountain dimensions for comparison.');
+    });
+
+    it('should round width values appropriately', () => {
+      const mountain = {
+        name: 'Plateau Mountain',
+        height: 5500,
+        width: 7234.567,
+        shape: 'plateau',
+        country: 'Test Land',
+      };
+      
+      const description = generateMountainTriangleDescription(mountain);
+      expect(description).toBe('Plateau Mountain mountain triangle visualization. Height: 5500 meters. Base width: 7235 meters, calculated from plateau geological shape. Located in Test Land. Triangle represents proportional mountain dimensions for comparison.');
     });
   });
 
   describe('buildMountainAriaLabel', () => {
-    it('should build aria-label for unselected mountain', () => {
+    it('should build aria-label for unselected mountain with calculated width', () => {
       const options = {
         mountainName: 'Mount Everest',
         height: 8849,
         width: 5000,
+        shape: 'conical',
         country: 'Nepal/China',
         isSelected: false,
       };
       
       const ariaLabel = buildMountainAriaLabel(options);
       expect(ariaLabel).toBe(
-        'Select Mount Everest for comparison. Height: 8849m, Width: 5000m, Location: Nepal/China'
+        'Select Mount Everest for comparison. Height: 8849m, Calculated width: 5000m, Shape: conical, Location: Nepal/China'
       );
     });
 
-    it('should build aria-label for selected mountain', () => {
+    it('should build aria-label for selected mountain with calculated width', () => {
       const options = {
         mountainName: 'K2',
         height: 8611,
         width: 4200,
+        shape: 'conical',
         country: 'Pakistan/China',
         isSelected: true,
       };
       
       const ariaLabel = buildMountainAriaLabel(options);
       expect(ariaLabel).toBe(
-        'Deselect K2 for comparison. Height: 8611m, Width: 4200m, Location: Pakistan/China'
+        'Deselect K2 for comparison. Height: 8611m, Calculated width: 4200m, Shape: conical, Location: Pakistan/China'
       );
     });
 
-    it('should handle mountain without country', () => {
+    it('should handle dome-shaped mountain without country', () => {
       const options = {
         mountainName: 'Test Mountain',
         height: 7000,
         width: 3000,
+        shape: 'dome-shaped',
         isSelected: false,
       };
       
       const ariaLabel = buildMountainAriaLabel(options);
       expect(ariaLabel).toBe(
-        'Select Test Mountain for comparison. Height: 7000m, Width: 3000m'
+        'Select Test Mountain for comparison. Height: 7000m, Calculated width: 3000m, Shape: dome shaped'
       );
     });
 
-    it('should handle mountain with special characters in name', () => {
+    it('should handle ridge mountain with special characters in name', () => {
       const options = {
         mountainName: 'Cho Oyu (8,188m)',
         height: 8188,
         width: 4500,
+        shape: 'ridge',
         country: 'Nepal/China',
         isSelected: true,
       };
       
       const ariaLabel = buildMountainAriaLabel(options);
       expect(ariaLabel).toBe(
-        'Deselect Cho Oyu (8,188m) for comparison. Height: 8188m, Width: 4500m, Location: Nepal/China'
+        'Deselect Cho Oyu (8,188m) for comparison. Height: 8188m, Calculated width: 4500m, Shape: ridge, Location: Nepal/China'
       );
     });
 
-    it('should handle empty mountain name', () => {
+    it('should handle plateau mountain with empty name', () => {
       const options = {
         mountainName: '',
         height: 5000,
         width: 2000,
+        shape: 'plateau',
         isSelected: false,
       };
       
       const ariaLabel = buildMountainAriaLabel(options);
       expect(ariaLabel).toBe(
-        'Select  for comparison. Height: 5000m, Width: 2000m'
+        'Select  for comparison. Height: 5000m, Calculated width: 2000m, Shape: plateau'
       );
     });
 
-    it('should handle zero height and width values', () => {
+    it('should handle zero height and width values with shape', () => {
       const options = {
         mountainName: 'Flat Mountain',
         height: 0,
         width: 0,
+        shape: 'plateau',
         country: 'Test Land',
         isSelected: false,
       };
       
       const ariaLabel = buildMountainAriaLabel(options);
       expect(ariaLabel).toBe(
-        'Select Flat Mountain for comparison. Height: 0m, Width: 0m, Location: Test Land'
+        'Select Flat Mountain for comparison. Height: 0m, Calculated width: 0m, Shape: plateau, Location: Test Land'
       );
     });
   });

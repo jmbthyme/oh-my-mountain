@@ -1,6 +1,7 @@
 import React from 'react';
 import type { MountainTriangleProps } from '../types';
 import { generateTrianglePath, calculateScaledDimensions } from '../utils';
+import { generateMountainTriangleDescription } from '../utils/accessibility';
 import './MountainTriangle.css';
 
 /**
@@ -58,6 +59,9 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
   };
 
   const triangleColor = getTriangleColor(mountain.id);
+  
+  // Generate comprehensive accessibility description
+  const accessibleDescription = generateMountainTriangleDescription(mountain);
 
   return (
     <div 
@@ -65,7 +69,7 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
       data-testid={`triangle-${mountain.id}`}
       tabIndex={0}
       role="button"
-      aria-label={`${mountain.name} Mountain triangle showing ${mountain.name} with height ${mountain.height}m and calculated width ${mountain.width}m based on ${mountain.shape} shape`}
+      aria-label={accessibleDescription}
     >
       <svg
         width={scaledWidth}
@@ -78,7 +82,7 @@ const MountainTriangle: React.FC<MountainTriangleProps> = React.memo(({
         {/* Accessibility title and description */}
         <title id={titleId}>{mountain.name}</title>
         <desc id={descId}>
-          Mountain triangle showing {mountain.name} with height {mountain.height}m and calculated width {mountain.width}m based on {mountain.shape} shape
+          {accessibleDescription}
         </desc>
 
         {/* Triangle path */}

@@ -109,7 +109,7 @@ describe('MountainTriangle', () => {
     expect(titleElement).toHaveTextContent('Mount Everest');
 
     // Check for description
-    expect(screen.getByText(/Mountain triangle showing Mount Everest/)).toBeInTheDocument();
+    expect(screen.getByText(/Mount Everest mountain triangle visualization/)).toBeInTheDocument();
 
     // Check for focusable container (tabIndex becomes tabindex in DOM)
     const container = screen.getByRole('button');
@@ -205,12 +205,12 @@ describe('MountainTriangle', () => {
     const ariaLabel = container.getAttribute('aria-label');
     
     // Should mention calculated width and shape
-    expect(ariaLabel).toMatch(/calculated width.*conical shape/i);
+    expect(ariaLabel).toMatch(/calculated from conical geological shape/i);
 
     // SVG description should also mention calculated width
     const svg = screen.getByRole('img');
     const desc = svg.querySelector('desc');
-    expect(desc).toHaveTextContent(/calculated width.*conical shape/i);
+    expect(desc).toHaveTextContent(/calculated from conical geological shape/i);
   });
 
   it('shows calculated width indicator in width label', () => {
